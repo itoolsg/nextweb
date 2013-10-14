@@ -19,5 +19,8 @@
 	<mvc:resources location="/javascripts/" mapping="/javascripts/**" />
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-		p:prefix="/" p:suffix=".jsp" />	
+		p:prefix="/" p:suffix=".jsp" />
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		p:maxUploadSize="2000000" />
 </beans>

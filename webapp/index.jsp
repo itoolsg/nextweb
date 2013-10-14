@@ -8,7 +8,7 @@
 </head>
 <body>
 사진업로드하기
-<a href="/board/photo">글쓰기</a>
+<a href="/board/form">글쓰기</a>
 
 </body>
 </html>
