@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>${board.title}</title>
+<title>younkue :: ${board.title}</title>
 <script src="/javascripts/view.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/view.css" />
 <c:if test="${empty sessionScope.userid}">
