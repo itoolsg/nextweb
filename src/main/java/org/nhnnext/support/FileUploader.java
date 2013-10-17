@@ -23,7 +23,7 @@ public class FileUploader {
 		try {
 			multipartFile.transferTo(destFile);
 		} catch (Exception ex) {
-			throw new IllegalArgumentException(destFile + "로 첨부파일 옮기다 오류 발생");
+			throw new IllegalArgumentException(destFile + "Move Error");
 		}
 		return destFile;
 	}

@@ -11,10 +11,10 @@
 	<h1>사진 리스트</h1>
 	<a href="/board/form">글쓰기</a>
 	<ul>
-	<c:forEach var="document" items="${list}">
+	<c:forEach var="document" items="${boards}">
 		<li>
 		<c:if test="${document.filename != null}">
-		<a href="/board/${document.id}"><img src="/images/${document.filename}" width="100" height="100" alt="image" /></a>
+			<a href="/board/${document.id}"><img src="/images/${document.filename}" width="100" height="100" alt="image" /></a>
 		</c:if>
 		<p><a href="/board/${document.id}">${document.title}</a></p>
 		<p><a href="/board/${document.id}">${document.contents}</p>

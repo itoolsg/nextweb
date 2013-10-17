@@ -11,12 +11,15 @@
 	</context:component-scan>
 
 	<mvc:annotation-driven />
-
+	
+	
+	<mvc:resources location="/login/" mapping="/login/**" />
+	<mvc:resources location="/img/" mapping="/img/**" />
 	<mvc:resources location="/images/" mapping="/images/**" />
-
 	<mvc:resources location="/stylesheets/" mapping="/stylesheets/**" />
-
 	<mvc:resources location="/javascripts/" mapping="/javascripts/**" />
+	
+	
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/" p:suffix=".jsp" />
