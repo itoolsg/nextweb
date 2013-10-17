@@ -18,7 +18,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 			<input class="ps" type="password" name="password" placeholder="password"> 
 			<div class="bottom-action">
 				<button class="submit btn2">SIGN IN</button>
-				Not a Member? <a href="/login/register">Sign up</a>
+				Not a Member? <a class="signup" href="/login/register">Sign up</a>
 			</div>
 				
 			</div>

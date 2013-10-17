@@ -48,29 +48,28 @@ public class defaultController {
 			NoLoginException {
 		// session을 통해 가져옴
 		String userid = (String) session.getAttribute("userid");
+//		TEST계정.
+//		User user = userRepository.findOne("aa");
+//		User user2 = new User();
+//		user2.setUserid("aa");
+//		user2.setPassword("asas");
+//		user2.setName("asdasd");
+//		if (user != null) {
+//			user2 = user;
+//		} else {
+//			user2 = userRepository.save(user2);
+//		}
+//		return user2;
 
-		User user = userRepository.findOne("aa");
-		User user2 = new User();
-		user2.setUserid("aa");
-		user2.setPassword("asas");
-		user2.setName("asdasd");
-		if (user != null) {
-			user2 = user;
-		} else {
-			user2 = userRepository.save(user2);
-		}
+		if (userid == null)
+			throw new NoLoginException(); // 로그인이 안되어 있을 때
 
-		return user2;
-		//
-		// if (userid == null)
-		// throw new NoLoginException(); // 로그인이 안되어 있을 때
-		//
-		// User user = userRepository.findOne(userid);
-		//
-		// if (user == null)
-		// throw new NoUserException(session); // 해당하는 유저가 없을 때
-		//
-		// return user;
+		User user = userRepository.findOne(userid);
+
+		if (user == null)
+			throw new NoUserException(session); // 해당하는 유저가 없을 때
+
+		return user;
 	}
 
 	/**

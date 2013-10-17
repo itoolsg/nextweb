@@ -31,7 +31,6 @@ public class Mylog {
 
 				if (i == 5)
 					break;
-
 			}
 			writer.write("\n\n");
 			writer.close();

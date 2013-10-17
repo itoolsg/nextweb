@@ -26,6 +26,7 @@ public class CommentController extends defaultController {
 	 * </p>
 	 * 
 	 * @see Comment, Board, User
+	 * @throw NullPointerException if no contents in comment
 	 * @exception NoBoardException
 	 * @exception NoUserException
 	 * @exception NoLoginException
@@ -41,17 +42,24 @@ public class CommentController extends defaultController {
 	public String comment_write(@PathVariable Long id, String contents,
 			String modify, HttpSession session) {
 		try {
+			if (contents == null || contents.equals(""))
+				throw new NullPointerException("No Comments");
+
 			User user = getLoginUser(session);// 유저가 없으면 바로 에러
 			Board board = getBoard(id);
 			Comment comment = new Comment(board, contents);
 			comment.setUser(user);
 			commentRepository.save(comment);
 			return "redirect:/board/" + id;
+		} catch (NullPointerException e) {
+			Mylog.printError(e);
+			return "redirect:/board/" + id;
 		} catch (NoBoardException e) {
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
+			return "redirect:/login/form";
 		} catch (Exception e) {
-
+			Mylog.printError(e);
 		}
 		return "redirect:/board";
 	}
@@ -63,6 +71,7 @@ public class CommentController extends defaultController {
 	 * </p>
 	 * 
 	 * @see Comment, Board, User
+	 * @throw NullPointerException if no contents in comment
 	 * @exception NoBoardException
 	 * @exception NoUserException
 	 * @exception NoLoginException
@@ -80,9 +89,11 @@ public class CommentController extends defaultController {
 	public String comment_write(@PathVariable Long id,
 			@PathVariable Long comment_id, String contents, HttpSession session) {
 		try {
+			if (contents == null || contents.equals(""))
+				throw new NullPointerException("No Comments");
+
 			User user = getLoginUser(session);// 유저가 없으면 바로 에러
 			Board board = getBoard(id);
-
 			// 해당하는 부모 코멘트를 가져옴
 			Comment parentComment = getComment(comment_id);
 
@@ -93,9 +104,13 @@ public class CommentController extends defaultController {
 
 			commentRepository.save(comment);
 			return "redirect:/board/" + id;
+		} catch (NullPointerException e) {
+			Mylog.printError(e);
+			return "redirect:/board/" + id;
 		} catch (NoBoardException e) {
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
+			return "redirect:/login/form";
 		} catch (NoCommentException e) {
 		} catch (Exception e) {
 			Mylog.printError(e);

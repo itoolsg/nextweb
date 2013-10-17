@@ -11,28 +11,36 @@ window.onload = function() {
 			element[evnt] = func;
 		}
 	}
-	var checkButton = function(e){
+	var checkTag = function(e, tag) {
 		var e = e || window.event;
 		var target = e.target || e.srcElement;
 		var recover = "";
-		if(!target)
+		if (!target)
 			return false;
-		
-		//ul일때 null값 방지
-		if(target.nodeName != "BUTTON")
+
+		console.log("click tag : " + target.nodeName);
+
+		// Tag인지 아닌지 체크
+		if (target.nodeName != tag)
 			return false;
-		
+
 		return true;
 	}
 	var viewCommentForm = function(e) {
 		e = e || window.event;
-		
-		if(checkButton(e))
+
+		// 전송버튼
+		if (checkTag(e, "BUTTON"))
 			return false;
-		
+
+		// 글을 클릭할때만 반응
+		if (!checkTag(e, "SPAN"))
+			return false;
+
 		e.preventDefault();
 		e.stopPropagation();
-		var element = getElement(this, "reply");
+
+		var element = getElement(this, "comment-reply");
 		var len = element.length;
 		if (len == 0)
 			return false;

@@ -104,6 +104,7 @@ public class BoardController extends defaultController {
 			Mylog.printError(e);
 		} catch (NoUserException e) {//
 		} catch (NoLoginException e) {
+			return "redirect:/login/form";
 		} catch (Exception e) {
 			Mylog.printError(e);
 		}
@@ -158,6 +159,7 @@ public class BoardController extends defaultController {
 			Board savedBoard = boardRepository.save(board);
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
+			return "redirect:/login/form";
 		} catch (NoBoardException e) {
 		} catch (Exception e) {
 			Mylog.printError(e);
@@ -189,7 +191,7 @@ public class BoardController extends defaultController {
 			Mylog.printError(e);
 		} catch (NoBoardException e) {
 		} catch (Exception e) {
-			e.printStackTrace();
+			Mylog.printError(e);
 		}
 		return "redirect:/board";
 
@@ -227,6 +229,7 @@ public class BoardController extends defaultController {
 			return "redirect:/board";
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
+			return "redirect:/login/form";
 		} catch (NoBoardException e) {
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -261,6 +264,7 @@ public class BoardController extends defaultController {
 			Mylog.printError(e);// 삭제시 정보가 없을 떄
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
+			return "redirect:/login/form";
 		} catch (NoBoardException e) {
 		} catch (Exception e) {
 			e.printStackTrace();

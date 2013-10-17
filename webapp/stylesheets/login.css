@@ -8,6 +8,10 @@ img {
 a {
 	text-decoration:none;
 }
+.signup {
+	font-weight:bold;
+	text-decoration:underline;
+}
 .container {
 	position:absolute;
 	left:50%;

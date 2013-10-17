@@ -116,16 +116,16 @@ public class LoginController {
 			User user = getUser(userid);
 
 			// 비번 매치
-			if (!user.matchPs(password)) {
-				System.out.println("No match password");
-				return "redirect:/login/form";
-			}
+			if (!user.matchPs(password))
+				throw new InvalidUserException("No User password");
+			
 			System.out.println("Hello~~ userid : " + userid);
 			session.setAttribute("userid", userid);
 			return "redirect:/";
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
 		} catch (NoUserException e) {
+		} catch (InvalidUserException e) {
 		}
 		return "redirect:/login/form";
 	}

@@ -73,27 +73,28 @@ public class Comment {
 	public String getContents() {
 		return contents;
 	}
+
 	public Comment getComment() {
 		return this.comment;
 	}
+
 	public String getHtmlReply() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("<div class='reply' style='display:none;'>");
+		builder.append("<div class='comment-reply' style='display:none;'>");
 		builder.append("<form action='/board/" + board.getId() + "/" + this.id
 				+ "/comment_ok' method='post'>");
-		builder.append("<textarea name='contents' cols='50' rows='3' placeholder='글쓰세요.'></textarea>");
-		builder.append("<button>작성완료</button></form></div>");
+		builder.append("<textarea name='contents' cols='50' rows='3' placeholder='댓글 쓰세요.'></textarea>");
+		builder.append("<button>작성</button></form></div>");
 		return builder.toString();
 	}
 
 	public String getHtml() {
 		String html = "";
 		html = "<li>";
-		
 		html += "<div class='comment-list'>";
-		html += this.contents;
-		
-		if (comments != null && comments.size() > 0) {	
+		html += "<span>" + this.contents + "</span>";
+
+		if (comments != null && comments.size() > 0) {
 			html += "<ul>";
 			for (Comment c : comments) {
 				html += c.getHtml();
