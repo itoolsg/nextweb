@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author younkue
  */
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/user")
 public class LoginController {
 	@Autowired
 	private UserRepository userRepository;
@@ -78,7 +78,7 @@ public class LoginController {
 	/**
 	 * Title : 로그인 폼
 	 * <p>
-	 * http://localhost:8080/login/form
+	 * http://localhost:8080/user/form
 	 * </p>
 	 * 
 	 * */
@@ -96,7 +96,7 @@ public class LoginController {
 	/**
 	 * Title : 로그인 체크
 	 * <p>
-	 * http://localhost:8080/login/login_check
+	 * http://localhost:8080/user/login_check
 	 * </p>
 	 * 
 	 * @throws NullPointerException
@@ -127,13 +127,13 @@ public class LoginController {
 		} catch (NoUserException e) {
 		} catch (InvalidUserException e) {
 		}
-		return "redirect:/login/form";
+		return "redirect:/user/form";
 	}
 
 	/**
 	 * Title : 회원가입 폼
 	 * <p>
-	 * http://localhost:8080/login/register
+	 * http://localhost:8080/user/register
 	 * </p>
 	 * 
 	 * */
@@ -145,7 +145,7 @@ public class LoginController {
 	/**
 	 * Title : 가입 완료 체크
 	 * <p>
-	 * http://localhost:8080/login/signup
+	 * http://localhost:8080/user/signup
 	 * </p>
 	 * 
 	 * @throws NullPointerException
@@ -164,20 +164,21 @@ public class LoginController {
 
 			userRepository.save(user);
 			System.out.println("Congratulation!!!! : " + user.getUserid());
-			return "redirect:/login/form";
+			return "redirect:/user/form";
+			
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
 		} catch (InvalidUserException e) {
 		} catch (Exception e) {
 			Mylog.printError(e);
 		}
-		return "redirect:/login/register";
+		return "redirect:/user/register";
 	}
 	
 	/**
 	 * Title : 로그아웃
 	 * <p>
-	 * http://localhost:8080/login/logout
+	 * http://localhost:8080/user/logout
 	 * </p>
 	 * 
 	 * */

@@ -57,7 +57,7 @@ public class CommentController extends defaultController {
 		} catch (NoBoardException e) {
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
-			return "redirect:/login/form";
+			return "redirect:/user/form";
 		} catch (Exception e) {
 			Mylog.printError(e);
 		}
@@ -110,7 +110,7 @@ public class CommentController extends defaultController {
 		} catch (NoBoardException e) {
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
-			return "redirect:/login/form";
+			return "redirect:/user/form";
 		} catch (NoCommentException e) {
 		} catch (Exception e) {
 			Mylog.printError(e);

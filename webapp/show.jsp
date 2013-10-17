@@ -8,8 +8,39 @@
 <title>${board.title}</title>
 <script src="/javascripts/view.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/view.css" />
+<c:if test="${empty sessionScope.userid}">
+	<script type="text/javascript">
+	<!--
+		var oldload = window.onload;
+		window.onload = function() {
+			oldload();
+
+			var replyForm = document.getElementsByClassName("comment-reply");
+			for ( var i = 0; i < replyForm.length; i++) {
+				var textarea = replyForm[i].getElementsByTagName("textarea");
+				var submit = replyForm[i].getElementsByTagName("button");
+				if (textarea.length == 1) {
+					textarea[0].disabled = true;
+					textarea[0].placeholder = "로그인을 해주세요.";
+				}
+				if (submit.length == 1)
+					submit[0].disabled = true;
+			}
+		}
+		-->
+	</script>
+</c:if>
 </head>
 <body>
+	<c:choose>
+		<c:when test="${not empty sessionScope.userid}">
+			<a href="/user/logout">로그아웃하기</a>
+		</c:when>
+		<c:otherwise>
+			<a href="/user/form">로그인하기</a>
+		</c:otherwise>
+	</c:choose>
+	<br/>
 	<a href="/board">리스트</a>
 	<h1>${board.title}</h1>
 	<div>

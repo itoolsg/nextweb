@@ -9,13 +9,17 @@ import java.io.Writer;
 public class Mylog {
 	public static final String NO_DOCUMENT = "No Document";
 	public static final String ERROR = "";
-
+	/**
+	 * Title : 로그 분석기
+	 * <p>
+	 * Eclipse.app/ --  MacOs에 있음
+	 * </p>
+	 * 
+	 */
 	public static void printError(Exception e) {
 
 		try {
 			Writer writer = new BufferedWriter(new FileWriter("log.txt", true));
-			File f = new File("l.txt");
-			System.out.println(f.getCanonicalPath());
 			System.out.println("\n\n" + "Error : " + e.getMessage() + "\n\n");
 
 			writer.write("!!!!Error : " + e.getMessage() + "\n");

@@ -10,10 +10,10 @@
 <body>
 	<c:choose>
 		<c:when test="${not empty sessionScope.userid}">
-			<a href="/login/logout">로그아웃하기</a>
+			<a href="/user/logout">로그아웃하기</a>
 		</c:when>
 		<c:otherwise>
-			<a href="/login/form">로그인하기</a>
+			<a href="/user/form">로그인하기</a>
 		</c:otherwise>
 	</c:choose>
 	<br />

@@ -63,6 +63,9 @@ a {
 .comment-reply button:hover {
 	background-color:#e97964;
 }
+.comment-reply button:disabled {
+	background-color:#888;
+}
 .square_btn {
 	border:0;
 	margin:0;
@@ -86,3 +89,4 @@ a {
 .square_btn:hover {
 	background-color:#e97964;
 }
+

@@ -13,12 +13,12 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="title">LOGIN</div>
 		<div class="back"><a href="/board">리스트로 돌아가기</a></div>
 		
-		<form action="/login/login_check" method="post">
+		<form action="/user/login_check" method="post">
 			<input class="id" type="text" name="userid" placeholder="username">
 			<input class="ps" type="password" name="password" placeholder="password"> 
 			<div class="bottom-action">
 				<button class="submit btn2">SIGN IN</button>
-				Not a Member? <a class="signup" href="/login/register">Sign up</a>
+				Not a Member? <a class="signup" href="/user/register">Sign up</a>
 			</div>
 				
 			</div>
