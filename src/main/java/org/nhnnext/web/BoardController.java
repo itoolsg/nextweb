@@ -253,7 +253,7 @@ public class BoardController extends defaultController {
 			User user = getLoginUser(session);
 
 			Board board = getBoard(id);
-
+			board.deleteComments(commentRepository);
 			if (!board.matchId(user.getUserid())) { // 게시자가 아닐 때
 				// No match ERROR
 				System.out.println("No Match Err");

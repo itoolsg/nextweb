@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.nhnnext.repository.CommentRepository;
+
 @Entity
 public class Comment {
 
@@ -108,6 +110,17 @@ public class Comment {
 	@Override
 	public String toString() {
 		return "";
+	}
+
+	public void deleteComments(CommentRepository commentRepository) {
+		if (comments == null)
+			return;
+
+		for (Comment comment : comments) {
+			comment.deleteComments(commentRepository);
+			commentRepository.delete(comment);
+		}
+		comments.clear();
 	}
 
 }

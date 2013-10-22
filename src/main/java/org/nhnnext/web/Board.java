@@ -4,12 +4,16 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.nhnnext.log.Mylog;
+import org.nhnnext.repository.CommentRepository;
 
 @Entity
 public class Board {
@@ -84,5 +88,19 @@ public class Board {
 	@Override
 	public String toString() {
 		return "Board [title=" + title + ", contents=" + contents + "]";
+	}
+
+	public void deleteComments(CommentRepository commentRepository) {
+		if (comments == null)
+			return;
+
+		for (Comment comment : comments) {
+
+			if (comment.getComment() != null)
+				continue;
+
+			comment.deleteComments(commentRepository);
+			commentRepository.delete(comment);
+		}
 	}
 }
