@@ -1,0 +1,42 @@
+body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textare a,button,select{margin:0;padding:0}
+body,input,textarea,select,button,table{font-family:'Nanum Gothic',Dotum,AppleGothic,sans- serif;font-size:14px;}
+img,fieldset{border:0}
+ul,ol{list-style:none}
+em,address{font-style:normal}
+a{text-decoration:none}
+textarea{resize:none;}
+
+.container {
+	position:absolute;
+	left:50%;
+	top:100px;
+	margin-left:-200px;
+	width:400px;
+}
+
+.btn1 {
+	border:0;
+	margin:0;
+	background-color:#83dd83;
+	transition:all ease-in-out 0.2s;
+	-moz-transition:all ease-in-out 0.2s;
+	-o-transition: all ease-in-out 0.2s;
+	-webkit-transition:all ease-in-out 0.2s;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	display: inline-block;
+	
+	padding:0px 20px;
+	line-height: 35px;
+	height: 36px;
+	color:#fff;
+	font-weight: bold;
+	font-size:1em;
+}
+.btn1 a {
+	color:#fff;
+}
+.btn1:hover {
+	background-color:#e97964;
+}

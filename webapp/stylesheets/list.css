@@ -1,0 +1,53 @@
+body,a,p,li,input,button,div,textarea {
+	font-size:13px;
+	color:#333;
+}
+
+.title {
+	border:1px solid #ccc;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	margin:4px 0px;
+	text-align:center;
+}
+.title h1 {
+	margin:10px 0px;
+}
+p.fright {
+	margin:5px 0px;
+	float:right;
+}
+
+
+.documents {
+	
+}
+
+.documents li{
+	border-bottom:1px solid #ccc;
+	overflow:auto;
+	padding:5px 0px;
+	min-height:50px;
+}
+.documents li .thumb {
+	float:left;
+	width:50px;
+	height:50px;
+	margin-right: 20px;
+}
+.documents li .thumb img {
+	width:50px;
+	height:50px;
+}
+.documents li .content {
+	margin-top:4px;
+}
+.documents li .content a.subject{
+	font-weight:bold;
+	font-size:16px;
+} 
+.documents li .content a.contents{
+	font-size:12px;
+	color:#ccc;
+} 

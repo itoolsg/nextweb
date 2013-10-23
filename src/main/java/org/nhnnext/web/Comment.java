@@ -82,7 +82,7 @@ public class Comment {
 
 	public String getHtmlReply() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("<div class='comment-reply' style='display:none;'>");
+		builder.append("<div class='comment-reply needLogin' style='display:none;'>");
 		builder.append("<form action='/board/" + board.getId() + "/" + this.id
 				+ "/comment_ok' method='post'>");
 		builder.append("<textarea name='contents' cols='50' rows='3' placeholder='댓글 쓰세요.'></textarea>");
@@ -93,9 +93,10 @@ public class Comment {
 	public String getHtml() {
 		String html = "";
 		html = "<li>";
-		html += "<div class='comment-list'>";
-		html += "<span>" + this.contents + "</span>";
-
+		html += "<div class='comment-list'><div class='comment-indent'>";
+		html += "<p class='comment-writer'>" + this.user.getName() + "</p>";
+		html += "<p class='comment-contents'>" + this.contents + "</p>";
+		html += "</div>";
 		if (comments != null && comments.size() > 0) {
 			html += "<ul>";
 			for (Comment c : comments) {

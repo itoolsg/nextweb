@@ -6,6 +6,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>연규 가입</title>
+<link rel="stylesheet" type="text/css" href="/stylesheets/default.css" />
 <link rel="stylesheet" type="text/css" href="/stylesheets/login.css" />
 </head>
 <body>

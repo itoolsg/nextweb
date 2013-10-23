@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping("/user")
-public class LoginController {
+public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
@@ -78,11 +78,11 @@ public class LoginController {
 	/**
 	 * Title : 로그인 폼
 	 * <p>
-	 * http://localhost:8080/user/form
+	 * http://localhost:8080/user/login
 	 * </p>
 	 * 
 	 * */
-	@RequestMapping("/form")
+	@RequestMapping("/login")
 	public String showForm(HttpSession session) {
 
 		try {
@@ -121,31 +121,31 @@ public class LoginController {
 			
 			System.out.println("Hello~~ userid : " + userid);
 			session.setAttribute("userid", userid);
-			return "redirect:/";
+			return "redirect:/board";
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
 		} catch (NoUserException e) {
 		} catch (InvalidUserException e) {
 		}
-		return "redirect:/user/form";
+		return "redirect:/user/login";
 	}
 
 	/**
 	 * Title : 회원가입 폼
 	 * <p>
-	 * http://localhost:8080/user/register
+	 * http://localhost:8080/user/signup
 	 * </p>
 	 * 
 	 * */
-	@RequestMapping(value = "/register")
-	public String register() {
+	@RequestMapping(value = "/signup")
+	public String signup() {
 		return "/login/register";
 	}
 
 	/**
 	 * Title : 가입 완료 체크
 	 * <p>
-	 * http://localhost:8080/user/signup
+	 * http://localhost:8080/user/join
 	 * </p>
 	 * 
 	 * @throws NullPointerException
@@ -153,7 +153,7 @@ public class LoginController {
 	 * @throws InvalidUserException
 	 *             if user is invalid
 	 * */
-	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	@RequestMapping(value = "/join", method = RequestMethod.POST)
 	public String signup(User user) {
 		try {
 			if (user == null)
@@ -164,7 +164,7 @@ public class LoginController {
 
 			userRepository.save(user);
 			System.out.println("Congratulation!!!! : " + user.getUserid());
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 			
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
@@ -172,7 +172,7 @@ public class LoginController {
 		} catch (Exception e) {
 			Mylog.printError(e);
 		}
-		return "redirect:/user/register";
+		return "redirect:/user/signup";
 	}
 	
 	/**
@@ -185,6 +185,6 @@ public class LoginController {
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("userid");
-		return "redirect:/";
+		return "redirect:/board";
 	}
 }

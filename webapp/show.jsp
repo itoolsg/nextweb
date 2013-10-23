@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>younkue :: ${board.title}</title>
 <script src="/javascripts/view.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/default.css" />
 <link rel="stylesheet" type="text/css" href="/stylesheets/view.css" />
 <c:if test="${empty sessionScope.userid}">
 	<script type="text/javascript">
@@ -32,41 +33,50 @@
 </c:if>
 </head>
 <body>
-	<c:choose>
-		<c:when test="${not empty sessionScope.userid}">
-			<a href="/user/logout">로그아웃하기</a>
-		</c:when>
-		<c:otherwise>
-			<a href="/user/form">로그인하기</a>
-		</c:otherwise>
-	</c:choose>
-	<br/>
-	<a href="/board">리스트</a>
-	<h1>${board.title}</h1>
-	<div>
-		<c:if test="${board.filename != null}">
-			<img src="/images/${board.filename}" width="200" height="200" />
-			<br>
-		</c:if>
+	<div class="container">
+		<div class="top-menu">
+			<c:choose>
+				<c:when test="${not empty sessionScope.userid}">
+					<a href="/user/logout">로그아웃하기</a>
+				</c:when>
+				<c:otherwise>
+					<a href="/user/login">로그인하기</a>
+					<a href="/user/signup">회원가입하기</a>
+				</c:otherwise>
+			</c:choose>
+			&nbsp;&nbsp;<a href="/board">list</a>&nbsp;
+		</div>
 
-		${board.contents} <a href="./${id}/modify"><button class="modify">수정</button></a>
-		<a href="./${id}/delete"><button class="delete">삭제</button></a>
-	</div>
-	<div class="comments">
-		<ul>
-			<c:forEach var="comment" items="${comments}">
-				<c:if test="${comment.getComment() == null}">
+		<div class="content">
+			<h1>${board.title}</h1>
+
+			<c:if test="${board.filename != null}">
+				<img src="/images/${board.filename}" width="100%"  />
+				<br>
+			</c:if>
+			<div class="originalContent">
+				${board.contents}
+			</div>
+			<div class="btnArea">
+				<a href="./${id}/modify"><button class="modify">수정</button></a> <a href="./${id}/delete"><button class="delete">삭제</button></a>
+			</div>
+		</div>
+		<div class="comments">
+			<ul>
+				<c:forEach var="comment" items="${comments}">
+					<c:if test="${comment.getComment() == null}">
 						${comment.getHtml()}
 				</c:if>
-			</c:forEach>
-		</ul>
-	</div>
-	<div class="comment-reply">
-		<form action="/board/${id}/comment_ok" method="post">
-			<span><textarea name="contents" cols="50" rows="3"
-					placeholder="글쓰세요."></textarea>
-				<button>작성</button></span>
-		</form>
+				</c:forEach>
+			</ul>
+		</div>
+		<div class="comment-reply">
+			<form action="/board/${id}/comment_ok" method="post">
+				<span><textarea name="contents" cols="50" rows="3"
+						placeholder="글쓰세요."></textarea>
+					<button>작성</button></span>
+			</form>
+		</div>
 	</div>
 </body>
 </html>

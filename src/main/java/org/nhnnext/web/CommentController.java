@@ -50,14 +50,14 @@ public class CommentController extends defaultController {
 			Comment comment = new Comment(board, contents);
 			comment.setUser(user);
 			commentRepository.save(comment);
-			return "redirect:/board/" + id;
+			return "redirect:/board";// + id;
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
-			return "redirect:/board/" + id;
+			return "redirect:/board";// + id;
 		} catch (NoBoardException e) {
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 		} catch (Exception e) {
 			Mylog.printError(e);
 		}
@@ -110,7 +110,7 @@ public class CommentController extends defaultController {
 		} catch (NoBoardException e) {
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 		} catch (NoCommentException e) {
 		} catch (Exception e) {
 			Mylog.printError(e);

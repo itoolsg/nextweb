@@ -13,12 +13,14 @@
 			<a href="/user/logout">로그아웃하기</a>
 		</c:when>
 		<c:otherwise>
-			<a href="/user/form">로그인하기</a>
+			<a href="/user/login">로그인하기</a>
+			<a href="/user/signup">회원가입하기</a>
 		</c:otherwise>
 	</c:choose>
 	<br />
 	<br />
-	<a href="/board">리스트로 가기</a><br />
+	<a href="/board">리스트로 가기</a>
+	<br />
 	<br />
 	<a href="/board/form">글쓰기</a>
 

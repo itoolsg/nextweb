@@ -34,7 +34,7 @@ window.onload = function() {
 			return false;
 
 		// 글을 클릭할때만 반응
-		if (!checkTag(e, "SPAN"))
+		if (!checkTag(e, "P"))
 			return false;
 
 		e.preventDefault();

@@ -1,15 +1,15 @@
 package org.nhnnext.web;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import javax.servlet.http.HttpSession;
 
 import org.nhnnext.exception.NoBoardException;
 import org.nhnnext.exception.NoLoginException;
 import org.nhnnext.exception.NoUserException;
 import org.nhnnext.log.Mylog;
-import org.nhnnext.repository.BoardRepository;
-import org.nhnnext.repository.UserRepository;
 import org.nhnnext.support.FileUploader;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +25,29 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/board")
 public class BoardController extends defaultController {
 
+	
+	/**
+	 * Title : 리스트 보기, 글쓰기 페이지 합치기
+	 * <p>
+	 * http://localhost:8080/board
+	 * </p>
+	 * 
+	 */
+	@RequestMapping("")
+	public String showTimeLine(Model model) {
+		Iterable<Board> iterable = boardRepository.findAll();
+		Iterator<Board> iterator = iterable.iterator();
+
+		ArrayList<Board> boards = new ArrayList<Board>();
+		while (iterator.hasNext()) {
+			boards.add(0, iterator.next());
+		}
+
+		model.addAttribute("boards", boards);
+
+		return "timeline";
+	}
+	
 	/**
 	 * Title : 리스트 보기
 	 * <p>
@@ -32,9 +55,10 @@ public class BoardController extends defaultController {
 	 * </p>
 	 * 
 	 */
-	@RequestMapping("")
+	@RequestMapping("/list")
 	public String showList(Model model) {
 		model.addAttribute("boards", boardRepository.findAll());
+
 		return "list";
 	}
 
@@ -54,9 +78,9 @@ public class BoardController extends defaultController {
 			User user = getLoginUser(session);
 			return "form";
 		} catch (NoUserException e) {
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 		} catch (NoLoginException e) {
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -99,12 +123,12 @@ public class BoardController extends defaultController {
 			// 저장
 			Board savedBoard = boardRepository.save(board);
 
-			return "redirect:/board/" + savedBoard.getId();// view페이지로 갑니다.
+			return "redirect:/board";
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
 		} catch (NoUserException e) {//
 		} catch (NoLoginException e) {
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 		} catch (Exception e) {
 			Mylog.printError(e);
 		}
@@ -159,7 +183,7 @@ public class BoardController extends defaultController {
 			Board savedBoard = boardRepository.save(board);
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 		} catch (NoBoardException e) {
 		} catch (Exception e) {
 			Mylog.printError(e);
@@ -229,7 +253,7 @@ public class BoardController extends defaultController {
 			return "redirect:/board";
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 		} catch (NoBoardException e) {
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -264,7 +288,7 @@ public class BoardController extends defaultController {
 			Mylog.printError(e);// 삭제시 정보가 없을 떄
 		} catch (NoUserException e) {
 		} catch (NoLoginException e) {
-			return "redirect:/user/form";
+			return "redirect:/user/login";
 		} catch (NoBoardException e) {
 		} catch (Exception e) {
 			e.printStackTrace();
