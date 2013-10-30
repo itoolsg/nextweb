@@ -45,10 +45,9 @@
 </c:if>
 </head>
 <body>
-	<div id="blackscreen">
-	</div>
+	<div id="blackscreen"></div>
 	<div id="thumb-screen">
-		<img class="thumb" src="" alt="thumb open"  draggable="false"/>
+		<img class="thumb" src="" alt="thumb open" draggable="false" />
 	</div>
 	<div class="timelineContainer">
 		<div class="top-menu">
@@ -110,48 +109,50 @@
 							</p>
 							<c:if test="${document.filename != null}">
 								<div class="thumb">
-									<img src="/images/${document.filename}" width="100" height="100" alt="image" />
+									<img src="/images/${document.filename}" width="100"
+										height="100" alt="image" />
 								</div>
 							</c:if>
 							<div class="comments">
-							<div class="comments-show-area">
-								<p class="commentCount">
-									<c:choose>
-										<c:when test="${not empty document.comments}">
+								<div class="comments-show-area">
+									<p class="commentCount">
+										<c:choose>
+											<c:when test="${not empty document.comments}">
 								${document.comments.size()}개의 댓글
 							</c:when>
-										<c:otherwise>
+											<c:otherwise>
 								0개의 댓글. &nbsp; &nbsp; 댓글을 달아주세요.
 							</c:otherwise>
-									</c:choose>
-								</p>
-								<p class="comments-show">댓글 보기</p>
-							</div>
-								
-								<ul class="comments-list">
-									<c:forEach var="comment" items="${document.comments}">
-										<c:if test="${comment.getComment() == null}">
+										</c:choose>
+									</p>
+									<p class="comments-show">댓글 보기</p>
+								</div>
+								<div class="comment-area">
+									<ul class="comments-list">
+										<c:forEach var="comment" items="${document.comments}">
+											<c:if test="${comment.getComment() == null}">
 										${comment.getHtml()}
 									</c:if>
-									</c:forEach>
-								</ul>
-								<div class="main-comment-reply comment-reply needLogin">
-								<form action="/board/${document.id}/comment_ok" method="post">
-									<span><textarea name="contents" cols="50" rows="3"
-											placeholder="글쓰세요."></textarea>
-										<button>작성</button></span>
-								</form>
+										</c:forEach>
+									</ul>
+									<div class="main-comment-reply comment-reply needLogin">
+										<form action="/board/${document.id}/comment_ok" method="post">
+											<span><textarea name="contents" cols="50" rows="3"
+													placeholder="글쓰세요."></textarea>
+												<button>작성</button></span>
+										</form>
+									</div>
 								</div>
 							</div>
-							
-							
+
+
 						</div>
 					</li>
 				</c:forEach>
 			</ul>
-			
-			
-			
+
+
+
 		</div>
 	</div>
 </body>

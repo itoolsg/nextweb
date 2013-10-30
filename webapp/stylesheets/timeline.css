@@ -18,12 +18,14 @@ body {
 	opacity:0.7;
 	-moz-opacity:0.7;
 	display:none;
+	z-index:4;
 }
 #thumb-screen {
 	position:fixed;
 	left:50%;
 	top:50%;
 	display:none;
+	z-index:7;
 }
 .timelineContainer {
 	width: 700px;
@@ -170,26 +172,51 @@ picture {
 }
 
 .documents li .thumb {
-	margin: 10px 0px; width : 300px;
+	margin: 10px 0px;
+	width : 300px;
 	height: 300px;
 	width: 300px;
+	background:#fff;
+	z-index:2;
+	position:relative;
 }
 
 .documents li .thumb img {
 	width: 300px;
 	height: 300px;
+	z-index:2;
+	position:relative;
 }
 .comments {
-	margin-top: 10px;
-	padding-top: 10px;
 	border-top: 1px dotted #aaa;
+	background:#fff;
+}
+.comment-area {
+	position:relative;
+	overflow:hidden;
+	transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	-webkit-transition: all ease-in-out 0.7s;
+	height:0px;	
 }
 .comments-list {
 	display:none;
+	position:relative;
+	width:100%;
+	/* transition:top 1s;
+	-webkit-transition:top 1s;
+	-ms-transition:top 1s;
+	-moz-transition:top 1s;
+	-o-transtion:top 1s; */
+	z-index:1;
 }
+
 .comments-show-area {
 	border-bottom:1px dotted #aaa;
-	padding:0px 0px 10px;
+	position:relative;
+	z-index:2;
+	padding:10px 0px;
 	margin:0px 0px 5px;
 	text-align:center;
 	height:25px;
