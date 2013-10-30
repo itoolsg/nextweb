@@ -35,27 +35,34 @@ window.onload = function() {
 
 	var screen_thumb = getClassFirstElement(img_screen, "thumb");
 
-	var thumbclick = function(e) {
-		if (!checkTag(e, "IMG"))
+	var timelineclick = function(e) {
+		if (!checkTag(e, "IMG") && !checkTag(e, "P"))
 			return false;
-
-		var img = getElement(e);
-		var src = img.getAttribute("src");
+		
+		
+		var ele = getElement(e);
+		
+		if(ele.getAttribute("class") == "comments-show") {
+			toggleCommnets(e);
+			return false;
+		}
+		
+		var src = ele.getAttribute("src");
 
 		blackscreen.style.display = "block";
 		img_screen.style.display = "block";
 		document.body.style.overflow = "hidden";
-		if (img.naturalWidth) {
-			img_screen.style.marginLeft = -img.naturalWidth / 2 + "px";
-			img_screen.style.marginTop = -img.naturalHeight / 2 + "px";
+		if (ele.naturalWidth) {
+			img_screen.style.marginLeft = -ele.naturalWidth / 2 + "px";
+			img_screen.style.marginTop = -ele.naturalHeight / 2 + "px";
 		} else {
 			// Using an Image Object
-			img = new Image();
+			var img = new Image();
 			img.onload = function() {
 				img_screen.style.marginLeft = -this.width / 2 + "px";
 				img_screen.style.marginTop = -this.height / 2 + "px";
 			};
-			img.src = 'http://lorempixel.com/output/nature-q-c-640-480-3.jpg';
+			img.src = src;
 		}
 
 		screen_thumb.setAttribute("src", src);
@@ -130,7 +137,7 @@ window.onload = function() {
 
 		console.log(xy);
 	};
-	addEvent(timeline, "click", thumbclick);
+	addEvent(timeline, "click", timelineclick);
 	addEvent(blackscreen, "click", function() {
 		blackscreen.style.display = "none";
 		img_screen.style.display = "none";
@@ -144,9 +151,5 @@ window.onload = function() {
 	addEvent(img_screen, "mouseup", mouseup);
 	addEvent(img_screen, "mouseleave", mouseup);
 
-	var eles = document.getElementsByClassName("comments-show");
-	for ( var i = 0; i < eles.length; i++) {
-		addEvent(eles[i], "click", toggleCommnets);
-	}
 	countComments();
 };
