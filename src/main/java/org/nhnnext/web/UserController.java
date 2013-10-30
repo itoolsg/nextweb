@@ -139,7 +139,7 @@ public class UserController {
 	 * */
 	@RequestMapping(value = "/signup")
 	public String signup() {
-		return "/login/register";
+		return "/login/signup";
 	}
 
 	/**

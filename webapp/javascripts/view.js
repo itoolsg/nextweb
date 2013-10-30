@@ -51,4 +51,5 @@ window.onload = function() {
 	for ( var i = 0; i < elements.length; i++) {
 		addEvent(elements[i], "click", viewCommentForm);
 	}
+	
 };

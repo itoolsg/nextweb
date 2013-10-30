@@ -8,42 +8,9 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" />
 <link rel="stylesheet" type="text/css" href="/stylesheets/timeline.css" />
-<script type="text/javascript">
-<!--
-	//var oldload = window.onload;
-	window.onload = function() {
-		//if (typeof oldload != "object")
-		//	oldload();
+<script src="/javascripts/default.js" type="text/javascript"></script>
+<script src="/javascripts/timeline.js" type="text/javascript"></script>
 
-		var leftDocuments = document.getElementById("leftDocuments");
-		var rightDocuments = document.getElementById("rightDocuments");
-
-		var ul = document.getElementsByClassName("documents");
-
-		if (!ul || ul.length < 3)
-			return;
-
-		var left = ul[0];
-		var right = ul[1];
-		var original = ul[2];
-
-		var documents = original.getElementsByClassName("timeDocument");
-		var leftHeight = 0;
-		var rightHeight = 0;
-		for ( var i = 0; documents.length != 0; i++) {
-			if (leftHeight <= rightHeight) {
-				leftHeight += documents[0].offsetHeight;
-				left.appendChild(documents[0]);
-
-			} else {
-				rightHeight += documents[0].offsetHeight;
-				right.appendChild(documents[0]);
-			}
-		}
-	};
-
-	-->
-</script>
 <c:if test="${empty sessionScope.userid}">
 	<script type="text/javascript">
 	<!--
@@ -78,6 +45,11 @@
 </c:if>
 </head>
 <body>
+	<div id="blackscreen">
+	</div>
+	<div id="thumb-screen">
+		<img class="thumb" src="" alt="thumb open"  draggable="false"/>
+	</div>
 	<div class="timelineContainer">
 		<div class="top-menu">
 			<c:choose>
@@ -138,12 +110,11 @@
 							</p>
 							<c:if test="${document.filename != null}">
 								<div class="thumb">
-									<a href="/board/${document.id}"><img
-										src="/images/${document.filename}" width="100" height="100"
-										alt="image" /></a>
+									<img src="/images/${document.filename}" width="100" height="100" alt="image" />
 								</div>
 							</c:if>
 							<div class="comments">
+							<div class="comments-show-area">
 								<p class="commentCount">
 									<c:choose>
 										<c:when test="${not empty document.comments}">
@@ -154,25 +125,33 @@
 							</c:otherwise>
 									</c:choose>
 								</p>
-								<ul>
+								<p class="comments-show">댓글 보기</p>
+							</div>
+								
+								<ul class="comments-list">
 									<c:forEach var="comment" items="${document.comments}">
 										<c:if test="${comment.getComment() == null}">
 										${comment.getHtml()}
 									</c:if>
 									</c:forEach>
 								</ul>
-							</div>
-							<div class="comment-reply needLogin">
+								<div class="main-comment-reply comment-reply needLogin">
 								<form action="/board/${document.id}/comment_ok" method="post">
 									<span><textarea name="contents" cols="50" rows="3"
 											placeholder="글쓰세요."></textarea>
 										<button>작성</button></span>
 								</form>
+								</div>
 							</div>
+							
+							
 						</div>
 					</li>
 				</c:forEach>
 			</ul>
+			
+			
+			
 		</div>
 	</div>
 </body>
