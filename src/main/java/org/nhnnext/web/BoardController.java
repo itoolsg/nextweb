@@ -51,7 +51,7 @@ public class BoardController extends defaultController {
 	/**
 	 * Title : 리스트 보기
 	 * <p>
-	 * http://localhost:8080/board
+	 * http://localhost:8080/board/list
 	 * </p>
 	 * 
 	 */

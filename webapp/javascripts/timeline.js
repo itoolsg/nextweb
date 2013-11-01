@@ -36,7 +36,7 @@ window.onload = function() {
 	var screen_thumb = getClassFirstElement(img_screen, "thumb");
 
 	var timelineclick = function(e) {
-		if (!checkTag(e, "IMG") && !checkTag(e, "P"))
+		if (!checkTag(e, "IMG") && !checkTag(e, "A"))
 			return false;
 		
 		
@@ -44,28 +44,29 @@ window.onload = function() {
 		
 		if(ele.getAttribute("class") == "comments-show") {
 			toggleCommnets(e);
+			
 			return false;
 		}
-		
-		var src = ele.getAttribute("src");
-
-		blackscreen.style.display = "block";
-		img_screen.style.display = "block";
-		document.body.style.overflow = "hidden";
-		if (ele.naturalWidth) {
-			img_screen.style.marginLeft = -ele.naturalWidth / 2 + "px";
-			img_screen.style.marginTop = -ele.naturalHeight / 2 + "px";
-		} else {
-			// Using an Image Object
-			var img = new Image();
-			img.onload = function() {
-				img_screen.style.marginLeft = -this.width / 2 + "px";
-				img_screen.style.marginTop = -this.height / 2 + "px";
-			};
-			img.src = src;
+		if(ele.getAttribute("class") == "thumbnail") {
+			var src = ele.getAttribute("src");
+			blackscreen.style.display = "block";
+			img_screen.style.display = "block";
+			document.body.style.overflow = "hidden";
+			if (ele.naturalWidth) {
+				img_screen.style.marginLeft = -ele.naturalWidth / 2 + "px";
+				img_screen.style.marginTop = -ele.naturalHeight / 2 + "px";
+			} else {
+				// Using an Image Object
+				var img = new Image();
+				img.onload = function() {
+					img_screen.style.marginLeft = -this.width / 2 + "px";
+					img_screen.style.marginTop = -this.height / 2 + "px";
+				};
+				img.src = src;
+			}
+	
+			screen_thumb.setAttribute("src", src);
 		}
-
-		screen_thumb.setAttribute("src", src);
 	}
 
 	var toggleCommnets = function(e) {
@@ -88,15 +89,15 @@ window.onload = function() {
 					+ comment_reply.offsetHeight + 16 + "px";
 			comment_area.setAttribute("is_open","true");
 		}
-
+		e.preventDefault();
 	}
-	var countComments = function() {
+	var countComments = function() {//코멘트 세기
 
-		var comments = document.getElementsByClassName("comments");
+		var comments = document.getElementsByClassName("comments");//코멘트 영역
 
 		for ( var i = 0; i < comments.length; i++) {
-			var count_area = getClassFirstElement(comments[i], "commentCount");
-			var length = comments[i].getElementsByTagName("li").length;
+			var count_area = getClassFirstElement(comments[i], "commentCount");//코멘트 카운트
+			var length = comments[i].getElementsByTagName("li").length;//li의 갯수 == 코멘트 갯수
 			count_area.innerText = length + "개의 댓글";
 		}
 	}
@@ -138,10 +139,13 @@ window.onload = function() {
 		console.log(xy);
 	};
 	addEvent(timeline, "click", timelineclick);
-	addEvent(blackscreen, "click", function() {
+	addEvent(blackscreen, "click", function(e) {
+		if(checkTag(e,"IMG"))
+			return false;
 		blackscreen.style.display = "none";
 		img_screen.style.display = "none";
 		document.body.style.overflow = "auto";
+
 	});
 	addEvent(img_screen, "mousedown", function(e) {
 		prePos = getPosition(e);

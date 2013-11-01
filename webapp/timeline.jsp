@@ -45,10 +45,12 @@
 </c:if>
 </head>
 <body>
-	<div id="blackscreen"></div>
-	<div id="thumb-screen">
-		<img class="thumb" src="" alt="thumb open" draggable="false" />
+	<div id="blackscreen">
+		<div id="thumb-screen">
+			<img class="thumb" src="" alt="thumb open" draggable="false" />
+		</div>
 	</div>
+	
 	<div class="timelineContainer">
 		<div class="top-menu">
 			<c:choose>
@@ -110,7 +112,7 @@
 							<c:if test="${document.filename != null}">
 								<div class="thumb">
 									<img src="/images/${document.filename}" width="100"
-										height="100" alt="image" />
+										height="100" alt="image" class="thumbnail"/>
 								</div>
 							</c:if>
 							<div class="comments">
@@ -125,7 +127,7 @@
 							</c:otherwise>
 										</c:choose>
 									</p>
-									<p class="comments-show">댓글 보기</p>
+									<a class="comments-show" href="#">댓글 보기</a>
 								</div>
 								<div class="comment-area">
 									<ul class="comments-list">

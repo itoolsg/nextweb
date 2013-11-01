@@ -23,7 +23,6 @@ var checkTag = function(e, tag) {
 var getElement = function(e) {
 	var e = e || window.event;
 	var target = e.target || e.srcElement;
-
 	return target;
 }
 var getClassFirstElement = function(element, name) {
