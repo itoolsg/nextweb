@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
 
+import org.nhnnext.exception.EmptyStringException;
 import org.nhnnext.exception.NoBoardException;
 import org.nhnnext.exception.NoLoginException;
 import org.nhnnext.exception.NoUserException;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -25,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/board")
 public class BoardController extends defaultController {
 
-	
 	/**
 	 * Title : 리스트 보기, 글쓰기 페이지 합치기
 	 * <p>
@@ -47,7 +48,7 @@ public class BoardController extends defaultController {
 
 		return "timeline";
 	}
-	
+
 	/**
 	 * Title : 리스트 보기
 	 * <p>
@@ -133,6 +134,56 @@ public class BoardController extends defaultController {
 			Mylog.printError(e);
 		}
 		return "redirect:/board";
+	}
+
+	/**
+	 * Title : 글쓰기 과정 XHR
+	 * <p>
+	 * http://localhost:8080/board/write.json
+	 * </p>
+	 * 
+	 * @see Board
+	 * 
+	 * @throw NullPointerException if no contents in Board
+	 * @exception NoBoardException
+	 * @exception NoUserException
+	 * @exception NoLoginException
+	 * @param board
+	 *            게시글 폼
+	 * @param file
+	 *            파일
+	 * @param session
+	 *            세션(웬지 있을 거 같은 기분)
+	 * */
+	@RequestMapping(value = "/write.json", method = RequestMethod.POST)
+	public @ResponseBody Object writeXHR(Board board, MultipartFile file, HttpSession session) {
+
+		try {
+			User user = getUser("itoolsg");
+			board.setUser(user);// 게시자 입력
+
+			// file upload
+			String filename = FileUploader.upload(file);
+
+			// 파일이 존재 안할시 null로 반환
+			if (filename != null)
+				board.setFilename(filename);
+
+			// 저장
+			//Board savedBoard = ;
+			
+			return boardRepository.save(board);
+		} catch (NullPointerException e) {
+			Mylog.printError(e);
+			return WebError.error("No Contents", "내용을 입력해주세요.");
+//		} catch (NoLoginException e) {
+//			return "redirect:/user/login";
+		}  catch (NoUserException e) {
+			return WebError.error("No User", "잘못된 회원입니다.");
+		} catch (Exception e) {
+			Mylog.printError(e);
+		}
+		return null;
 	}
 
 	/**

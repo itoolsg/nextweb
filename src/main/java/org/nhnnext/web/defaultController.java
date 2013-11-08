@@ -90,7 +90,32 @@ public class defaultController {
 
 		return board;
 	}
+	
+	
+	/**
+	 * Title : 유저 가져오기
+	 * <p>
+	 * 예외처리 포함해서 가져옴
+	 * </p>
+	 * 
+	 * @param session
+	 *            세션
+	 * 
+	 * @throws NoUserException
+	 *             if no user
+	 */
+	public User getUser(String userid) throws NoUserException {
+		// session을 통해 가져옴
 
+		User user = userRepository.findOne(userid);
+
+		if (user == null)
+			throw new NoUserException(userid); // 해당하는 유저가 없을 때
+
+		return user;
+	}
+	
+	
 	/**
 	 * Title : 코멘트 가져오기
 	 * <p>

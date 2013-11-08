@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.nhnnext.repository.CommentRepository;
 
 @Entity
@@ -24,9 +25,11 @@ public class Comment {
 	@Column(length = 1000, nullable = false)
 	private String contents;
 
+	@JsonIgnore
 	@ManyToOne
 	private Board board;
-
+	
+	@JsonIgnore
 	@ManyToOne
 	private Comment comment;
 
@@ -36,6 +39,7 @@ public class Comment {
 	@ManyToOne
 	private User user;
 
+	
 	public Comment() { // 반드시 빈 생성자를 생성해야 한다.
 
 	}
@@ -44,11 +48,13 @@ public class Comment {
 		this.board = board;
 		this.comment = comment;
 		this.contents = contents;
+		
 	}
 
 	public Comment(Board board, String contents) {
 		this.board = board;
 		this.contents = contents;
+		
 	}
 
 	public void setUser(User user) {
@@ -75,6 +81,9 @@ public class Comment {
 	public String getContents() {
 		return contents;
 	}
+	public Long getBid() {
+		return board.getId();
+	}
 
 	public Comment getComment() {
 		return this.comment;
@@ -86,16 +95,17 @@ public class Comment {
 		builder.append("<form action='/board/" + board.getId() + "/" + this.id
 				+ "/comment_ok' method='post'>");
 		builder.append("<textarea name='contents' cols='50' rows='3' placeholder='댓글 쓰세요.'></textarea>");
-		builder.append("<button>작성</button></form></div>");
+		builder.append("<button class='commentButton'>작성</button></form></div>");
 		return builder.toString();
 	}
 
 	public String getHtml() {
 		String html = "";
-		html = "<li>";
+		html = "<li id='comment"+this.id+"'>";
 		html += "<div class='comment-list'><div class='comment-indent'>";
 		html += "<p class='comment-writer'>" + this.user.getName() + "</p>";
 		html += "<p class='comment-contents'>" + this.contents + "</p>";
+		html += "<p class='comment-delete' board_id="+this.board.getId()+" comment_id="+this.id+">삭제버튼</p>";
 		html += "</div>";
 		if (comments != null && comments.size() > 0) {
 			html += "<ul>";

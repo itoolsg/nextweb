@@ -45,12 +45,67 @@
 </c:if>
 </head>
 <body>
+	<div id="sample">
+		<ul class="commentSample">
+			<li id='comment{comment.id}'>
+				<div class='comment-list'>
+					<div class='comment-indent'>
+						<p class='comment-writer'>{comment.userid}</p>
+						<p class="comment-contents">{comment.contents}</p>
+						<a href="#" class='comment-delete' board_id="{comment.bid}"
+							comment_id="{comment.id}">x</a>
+					</div>
+				</div>
+			</li>
+		</ul>
+		<ul class="boardSample">
+			<li class="timeDocument" id="board{document.id}">
+				<div class="contents">
+
+					<p>
+						<a class="subject" href="/board/{document.id}">{document.title}</a>
+					</p>
+					<hr class="line" />
+					<div class="content">
+						{document.contents}
+						<div class="thumb" style="display: {is_image}">
+							<img is_src="/images/{document.filename}" width="100"
+								height="100" alt="image" class="thumbnail" />
+						</div>
+						<p class="posted">
+							Posted By <span class="by">{document.user}</span>
+						</p>
+					</div>
+
+					<div class="comments">
+						<div class="comments-show-area">
+							<p class="commentCount">0개의 댓글</p>
+							<a class="comments-show" href="#">댓글 보기</a>
+						</div>
+						<div class="comment-area">
+							<ul class="comments-list">
+							</ul>
+							<div class="main-comment-reply comment-reply needLogin">
+								<form action="/board/{document.id}/comment_ok" method="post">
+									<input type="hidden" name="id" value="{document.id}" /> <span><textarea
+											name="contents" cols="50" rows="3" placeholder="글쓰세요."></textarea>
+										<button submit="comment">작성</button></span>
+								</form>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</li>
+		</ul>
+	</div>
 	<div id="blackscreen">
 		<div id="thumb-screen">
 			<img class="thumb" src="" alt="thumb open" draggable="false" />
 		</div>
 	</div>
-	
+
 	<div class="timelineContainer">
 		<div class="top-menu">
 			<c:choose>
@@ -64,98 +119,100 @@
 			</c:choose>
 
 		</div>
-		<div id="timeline">
-			<div id="leftDocuments">
-				<ul class="documents">
-				</ul>
-			</div>
-			<div id="rightDocuments">
-				<ul class="documents">
-				</ul>
-			</div>
+		<ul class="documents">
+			<li class="timeDocument writeDocument">
+				<div class="write-form needLogin">
+					<form action="/board/write" method="post"
+						enctype="multipart/form-data">
+						<input type="text" name="title" size=40 placeholder="제목 입력해주세요."
+							onfocus="document.getElementById('content').style.display='block';"><br />
+						<div id="content">
+							<textarea class="contents" name="contents" rows="10" cols="50"
+								placeholder="글자를 입력해주세요.">${board.contents}</textarea>
 
-
-			<ul class="documents">
-				<li class="timeDocument">
-					<div class="write-form needLogin">
-						<form action="/board/write" method="post"
-							enctype="multipart/form-data">
-							<input type="text" name="title" size=40 placeholder="제목 입력해주세요."
-								onfocus="document.getElementById('content').style.display='block';"><br />
-							<div id="content">
-								<textarea class="contents" name="contents" rows="10" cols="50"
-									placeholder="글자를 입력해주세요.">${board.contents}</textarea>
-
-								<div class="bottom-action">
-									<div class="picture">
-										<img id="getpicture" class="getpicture" alt="get picture"
-											onclick="document.getElementById('file').click();" /> <input
-											id="file" type="file" name="file"
-											onchange="document.getElementById('filename').innerHTML=this.value;" />
-										<div id="filename"></div>
-									</div>
-									<button class="submit btn1">올리기</button>
+							<div class="bottom-action">
+								<div class="picture">
+									<img id="getpicture" class="getpicture" alt="get picture"
+										onclick="document.getElementById('file').click();" /> <input
+										id="file" type="file" name="file"
+										onchange="document.getElementById('filename').innerHTML=this.value;" />
+									<div id="filename"></div>
 								</div>
+								<button class="submit btn1" submit="board">올리기</button>
 							</div>
-						</form>
-					</div>
-				</li>
-				<c:forEach var="document" items="${boards}">
-					<li class="timeDocument">
+						</div>
+					</form>
+				</div>
+			</li>
+			<c:forEach var="document" items="${boards}">
+				<li class="timeDocument" id="board${document.id}">
+					<div class="contents">
+
+						<p>
+							<a class="subject" href="/board/${document.id}">${document.title}</a>
+						</p>
+						<hr class="line" />
 						<div class="content">
-							<p>
-								<a class="subject" href="/board/${document.id}">${document.title}</a>
-							</p>
-							<p>
-								<a class="contents" href="/board/${document.id}">${document.contents}</a>
-							</p>
+							${document.createContentsTag()}
 							<c:if test="${document.filename != null}">
 								<div class="thumb">
 									<img src="/images/${document.filename}" width="100"
-										height="100" alt="image" class="thumbnail"/>
+										height="100" alt="image" class="thumbnail" />
 								</div>
 							</c:if>
-							<div class="comments">
-								<div class="comments-show-area">
-									<p class="commentCount">
-										<c:choose>
-											<c:when test="${not empty document.comments}">
+							<p class="posted">
+								Posted By <span class="by">${document.user.userid}</span>
+							</p>
+						</div>
+
+						<div class="comments">
+							<div class="comments-show-area">
+								<p class="commentCount">
+									<c:choose>
+										<c:when test="${not empty document.comments}">
 								${document.comments.size()}개의 댓글
 							</c:when>
-											<c:otherwise>
+										<c:otherwise>
 								0개의 댓글. &nbsp; &nbsp; 댓글을 달아주세요.
 							</c:otherwise>
-										</c:choose>
-									</p>
-									<a class="comments-show" href="#">댓글 보기</a>
-								</div>
-								<div class="comment-area">
-									<ul class="comments-list">
-										<c:forEach var="comment" items="${document.comments}">
-											<c:if test="${comment.getComment() == null}">
-										${comment.getHtml()}
-									</c:if>
-										</c:forEach>
-									</ul>
-									<div class="main-comment-reply comment-reply needLogin">
-										<form action="/board/${document.id}/comment_ok" method="post">
-											<span><textarea name="contents" cols="50" rows="3"
-													placeholder="글쓰세요."></textarea>
-												<button>작성</button></span>
-										</form>
-									</div>
+									</c:choose>
+								</p>
+								<a class="comments-show" href="#">댓글 보기</a>
+							</div>
+							<div class="comment-area">
+								<ul class="comments-list">
+									<c:forEach var="comment" items="${document.comments}">
+										<li id='comment${comment.id}'>
+											<div class='comment-list'>
+												<div class='comment-indent'>
+													<p class='comment-writer'>${comment.user.userid}</p>
+													<p class="comment-contents">${comment.contents}</p>
+													<a href="#" class='comment-delete' board_id="${document.id}"
+														comment_id="${comment.id}">x</a>
+												</div>
+											</div>
+										</li>
+									</c:forEach>
+								</ul>
+								<div class="main-comment-reply comment-reply needLogin">
+									<form action="/board/${document.id}/comment_ok" method="post">
+										<input type="hidden" name="id" value="${document.id}" /> <span><textarea
+												name="contents" cols="50" rows="3" placeholder="글쓰세요."></textarea>
+											<button submit='comment'>작성</button></span>
+									</form>
 								</div>
 							</div>
-
-
 						</div>
-					</li>
-				</c:forEach>
-			</ul>
+
+
+					</div>
+				</li>
+			</c:forEach>
+		</ul>
 
 
 
-		</div>
+	</div>
 	</div>
 </body>
 </html>

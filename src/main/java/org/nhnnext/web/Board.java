@@ -85,6 +85,10 @@ public class Board {
 		return id.equals(user.getUserid());
 	}
 
+	public String createContentsTag() {
+		String tagContents = contents.replace("\n", "<br />");
+		return tagContents;
+	}
 	@Override
 	public String toString() {
 		return "Board [title=" + title + ", contents=" + contents + "]";

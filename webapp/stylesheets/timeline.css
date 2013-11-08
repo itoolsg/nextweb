@@ -1,10 +1,16 @@
+@import url(http://fonts.googleapis.com/css?family=Satisfy);
+@import url(http://fonts.googleapis.com/earlyaccess/nanumpenscript.css);
+ 
 body,a,p,li,input,button,div,textarea {
 	font-size: 13px;
 	color: #333;
 }
 
 body {
-	background: #e7f1e7;
+	background: #EAF2F3;
+}
+#sample {
+	display:none;
 }
 #blackscreen {
 	position:fixed;
@@ -81,10 +87,6 @@ p.fright {
 	float: right;
 }
 
-picture {
-	float: left;
-}
-
 .picture img {
 	vertical-align: middle;
 	float: left;
@@ -129,43 +131,45 @@ picture {
 	width:630px;
 	margin:0px auto;
 }
-#leftDocuments {
-	float: left;
-	width:300px;
-}
-
-#rightDocuments {
-	float: right;
-	width:300px;
-}
 
 .documents {
 	margin-top: 10px;
 	overflow: hidden;
-	width:320px;
+	width:100%;
 }
 
 .documents li.timeDocument {
 	background-color: #fff;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
+	border:1px solid #ddd;
 	overflow: hidden;
 	min-height: 50px;
-	width: 300px;
-	padding: 10px;
+	padding: 30px;
 	margin:8px 0px;
 }
 
-.documents li .content a.subject {
+.documents li .contents a.subject {
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 40px;
+	font-family: 'Satisfy', 'Nanum Pen Script' , cursive;
+	color:#98BDDA;
 }
-
-.documents li .content a.contents {
-	font-size: 13px;
+.documents li .contents .line {
+	border:0;
+	border-top:4px solid #98BDDA;
+	
+	margin:10px 0px 20px;
+}
+.documents li .contents .content {
+	font-size: 14px;
 	color: #aaa;
-	padding-bottom: 14px;
+	margin-bottom: 14px;
+}
+.documents li .contents .posted {
+	text-align:right;
+	color:#666;
+}
+.documents li .contents .posted .by {
+	color:#f66;
 }
 
 .documents li .thumb {
@@ -176,6 +180,7 @@ picture {
 	background:#fff;
 	z-index:2;
 	position:relative;
+	margin:0px auto;
 }
 
 .documents li .thumb img {
@@ -184,29 +189,10 @@ picture {
 	z-index:2;
 	position:relative;
 }
+
 .comments {
 	border-top: 1px dotted #aaa;
 	background:#fff;
-}
-.comment-area {
-	position:relative;
-	overflow:hidden;
-	transition: all ease-in-out 0.7s;
-	-moz-transition: all ease-in-out 0.7s;
-	-o-transition: all ease-in-out 0.7s;
-	-webkit-transition: all ease-in-out 0.7s;
-	height:0px;	
-}
-.comments-list {
-	display:none;
-	position:relative;
-	width:100%;
-	/* transition:top 1s;
-	-webkit-transition:top 1s;
-	-ms-transition:top 1s;
-	-moz-transition:top 1s;
-	-o-transtion:top 1s; */
-	z-index:1;
 }
 
 .comments-show-area {
@@ -225,6 +211,7 @@ picture {
 	font-size:0.9em;
 	float:left;
 }
+
 .comments-show {
 	color:#aaa;
 	font-size:0.9em;
@@ -232,6 +219,26 @@ picture {
 	float:right;
 }
 
+.comment-area {
+	position:relative;
+	overflow:hidden;
+	transition: all ease-in-out 0.5s;
+	-moz-transition: all ease-in-out 0.5s;
+	-o-transition: all ease-in-out 0.5s;
+	-webkit-transition: all ease-in-out 0.5s;
+	height:0px;	
+}
+.comments-list {
+	display:none;
+	position:relative;
+	width:100%;
+	/* transition:top 1s;
+	-webkit-transition:top 1s;
+	-ms-transition:top 1s;
+	-moz-transition:top 1s;
+	-o-transtion:top 1s; */
+	z-index:1;
+}
 
 .comments li {
 	margin:5px 0px;
@@ -257,13 +264,21 @@ picture {
 
 .comments li .comment-contents {
 	font-size: 1em;
+	float:left;
+}
+.comments li .comment-delete {
+	float:right;
+	color:#f66;
+	font-weight:bold;
 }
 .main-comment-reply {
 	display:none;
 } 
 .comment-reply {
-	width: 295px;
+	width: 620px;
 	overflow: hidden;
+	margin:7px auto 0px;
+	
 }
 .reply-button-area {
 	text-align:center;
@@ -274,8 +289,8 @@ picture {
 	border:6px solid #DF8395;
 }
 .comment-reply textarea {
-	width: 225px;
-	height: 20px;
+	width: 505px;
+	height: 50px;
 	min-height: 20px;
 	padding: 10px 10px;
 	border: 1px solid #ccc;
@@ -283,17 +298,16 @@ picture {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	background-color: #eee;
-	float: left;
+	display:inline-block;
+	vertical-align:middle;
 	border: 0;
-	float: left;
 }
 
 .comment-reply button {
-	float: left;
 	margin-left: 10px;
 	border: 0;
-	width: 40px;
-	height: 40px;
+	width: 70px;
+	height: 70px;
 	color: #fff;
 	font-weight: bold;
 	font-size: 13px;

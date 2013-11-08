@@ -14,7 +14,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 		<div class="title">SIGN UP</div>
 		<div class="back"><a href="/board">로그인으로 돌아가기</a></div>
 		
-		<form action="/user/signup" method="post">
+		<form action="/user/join" method="post">
 			<input class="id" type="text" name="userid" placeholder="username">
 			<input class="ps" type="password" name="password" placeholder="password">
 			<input class="name" type="text" name="name" placeholder="Your Name">
