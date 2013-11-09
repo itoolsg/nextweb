@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" />
 <link rel="stylesheet" type="text/css" href="/stylesheets/timeline.css" />
 <script src="/javascripts/default.js" type="text/javascript"></script>
+<script src="/javascripts/write.js" type="text/javascript"></script>
 <script src="/javascripts/timeline.js" type="text/javascript"></script>
 
 <c:if test="${empty sessionScope.userid}">
@@ -59,16 +60,16 @@
 			</li>
 		</ul>
 		<ul class="boardSample">
-			<li class="timeDocument" id="board{document.id}">
+			<li class="timeDocument" id="board{document.id}" board="{document.id}">
 				<div class="contents">
-
+					<a class="board-delete" href="#">x</a>
 					<p>
 						<a class="subject" href="/board/{document.id}">{document.title}</a>
 					</p>
 					<hr class="line" />
 					<div class="content">
 						{document.contents}
-						<div class="thumb" style="display: {is_image}">
+						<div class="thumb" style="display: {is_image">
 							<img is_src="/images/{document.filename}" width="100"
 								height="100" alt="image" class="thumbnail" />
 						</div>
@@ -120,7 +121,7 @@
 
 		</div>
 		<ul class="documents">
-			<li class="timeDocument writeDocument">
+			<li class="writeDocument">
 				<div class="write-form needLogin">
 					<form action="/board/write" method="post"
 						enctype="multipart/form-data">
@@ -145,9 +146,10 @@
 				</div>
 			</li>
 			<c:forEach var="document" items="${boards}">
-				<li class="timeDocument" id="board${document.id}">
+				<li id="board${document.id}"
+					board="${document.id}">
 					<div class="contents">
-
+						<a class="board-delete" href="#">x</a>
 						<p>
 							<a class="subject" href="/board/${document.id}">${document.title}</a>
 						</p>
@@ -187,8 +189,8 @@
 												<div class='comment-indent'>
 													<p class='comment-writer'>${comment.user.userid}</p>
 													<p class="comment-contents">${comment.contents}</p>
-													<a href="#" class='comment-delete' board_id="${document.id}"
-														comment_id="${comment.id}">x</a>
+													<a href="#" class='comment-delete'
+														board_id="${document.id}" comment_id="${comment.id}">x</a>
 												</div>
 											</div>
 										</li>

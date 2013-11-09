@@ -138,20 +138,31 @@ p.fright {
 	width:100%;
 }
 
-.documents li.timeDocument {
+.documents li {
 	background-color: #fff;
 	border:1px solid #ddd;
 	overflow: hidden;
 	min-height: 50px;
 	padding: 30px;
 	margin:8px 0px;
+	position:relative;
 }
-
+.documents li .contents {
+	position:relative;
+}
+.documents li .contents .board-delete {
+	position:absolute;
+	right:10px;
+	top:5px;
+	color:#DA98BC;
+	font-size:1.5em;
+}
 .documents li .contents a.subject {
 	font-weight: bold;
 	font-size: 40px;
 	font-family: 'Satisfy', 'Nanum Pen Script' , cursive;
 	color:#98BDDA;
+	font-weight:bold;
 }
 .documents li .contents .line {
 	border:0;
@@ -228,6 +239,9 @@ p.fright {
 	-webkit-transition: all ease-in-out 0.5s;
 	height:0px;	
 }
+.comments {
+	
+}
 .comments-list {
 	display:none;
 	position:relative;
@@ -240,21 +254,28 @@ p.fright {
 	z-index:1;
 }
 
-.comments li {
+.comments-list li {
 	margin:5px 0px;
+	background:none;
+	border:0;
+	overflow: hidden;
+	min-height:0;
+	padding:0;
+	margin:0;
+	position:relative;
 }
-.comments li li{
+.comments-list li li{
 	margin:5px 0px;
 	padding:3px 0px 3px 10px;
 	background-color:#f1f1f1;
 	
 }
 
-.comments li .comment-indent {
+.comments-list li .comment-indent {
 	overflow: hidden;
 	padding:5px 0px;
 }
-.comments li .comment-writer {
+.comments-list li .comment-writer {
 	float: left;
 	margin-right: 10px;
 	color: #3074a5;
@@ -262,11 +283,11 @@ p.fright {
 	font-weight: bold;
 }
 
-.comments li .comment-contents {
+.comments-list li .comment-contents {
 	font-size: 1em;
 	float:left;
 }
-.comments li .comment-delete {
+.comments-list li .comment-delete {
 	float:right;
 	color:#f66;
 	font-weight:bold;

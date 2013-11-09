@@ -14,65 +14,24 @@ window.onload = function() {
 
 		var ele = getElement(e);
 
-		if (ele.getAttribute("class") == "comments-show") {
+		if (ele.getAttribute("class") == "comments-show")
 			toggleCommnets(e);
-			return false;
-		}
-		if (checkTag(e, "BUTTON") && ele.getAttribute("submit") == "comment")
+		else if (checkTag(e, "BUTTON") && ele.getAttribute("submit") == "comment")
 			writeComment(e);
 
-		if (checkTag(e, "BUTTON") && ele.getAttribute("submit") == "board")
+		else if (checkTag(e, "BUTTON") && ele.getAttribute("submit") == "board")
 			writeBoard(e);
-
-		if (checkTag(e, "A") && ele.getAttribute("class") == "comment-delete")
+		
+		else if (checkTag(e, "A") && ele.getAttribute("class") == "comment-delete")
 			deleteComment(e);
-
-		if (ele.getAttribute("class") == "thumbnail")
+		
+		else if (checkTag(e, "A") && ele.getAttribute("class") == "board-delete")
+			deleteBoard(e);
+		
+		else if (ele.getAttribute("class") == "thumbnail")
 			showThumbnail(e);
 
 		return false;
-	}
-	var writeBoard = function(e) {
-		console.log("writeBoard");
-		e.preventDefault(); // submit 이 자동으로 동작하는 것을 막는다.
-		var eleForm = getElement(e).form;
-
-		var oFormData = new FormData(eleForm); // form data들을 자동으로 묶어준다.
-
-		var sID = eleForm[0].value; // // 현재페이지의 ID값을 확인한다.! !
-		var url = "/board/write.json"; // 서버로 보낼 주소!
-
-		var request = new XMLHttpRequest();
-		request.open("POST", url, true);
-		request.onreadystatechange = function() {
-			if (request.readyState == 4 && request.status == 200) {
-				console.log("hello");
-				var obj = JSON.parse(request.responseText);
-				var writeDocument = getClassFirstElement(document,
-						"writeDocument");
-				var sample = getClassFirstElement(document, "boardSample");
-				var html = sample.innerHTML;
-				var is_img = (obj.filename == null) ? "none" : "block";
-
-				html = html.replace("{is_image}", is_img);
-
-				if (is_img == "block") {
-					html = html.replace("{document.filename}", obj.filename);
-					html = html.replace("is_src", "src");
-				}
-
-				html = replaceAll(html, "{document.id}", obj.id);
-
-				html = html.replace("{document.user}", obj.user.userid);
-
-				html = html.replace("{document.title}", obj.title);
-				html = html.replace("{document.contents}", obj.contents);
-
-				writeDocument.insertAdjacentHTML("afterend", html);
-				eleForm.reset();
-			}
-		};
-		request.send(oFormData);
 	}
 	var writeComment = function(e) {
 		console.log("writeComment");

@@ -6,7 +6,9 @@ import java.util.Iterator;
 import javax.servlet.http.HttpSession;
 
 import org.nhnnext.exception.EmptyStringException;
+import org.nhnnext.exception.InvalidUserException;
 import org.nhnnext.exception.NoBoardException;
+import org.nhnnext.exception.NoCommentException;
 import org.nhnnext.exception.NoLoginException;
 import org.nhnnext.exception.NoUserException;
 import org.nhnnext.log.Mylog;
@@ -345,5 +347,54 @@ public class BoardController extends defaultController {
 			e.printStackTrace();
 		}
 		return "redirect:/board";
+	}
+	/**
+	 * Title : 글을 삭제 과정 XHR
+	 * 
+	 * <p>
+	 * http://localhost:8080/board/100/comment_delete.json
+	 * </p>
+	 * 
+	 * @see Board, User
+	 * @exception NoBoardException
+	 * @exception NoUserException
+	 * @exception NoLoginException
+	 * @exception InvalidUserException
+	 * 
+	 * @param id
+	 *            게시글 아이디
+	 * @param session
+	 *            세션(웬지 있을 거 같은 기분)
+	 * */
+	@RequestMapping(value = "/{id}/board_delete.json", method = RequestMethod.POST)
+	public @ResponseBody
+	Object deleteBoard(@PathVariable Long id, HttpSession session) {
+		
+		try {
+			Board board = getBoard(id);
+			// 해당하는 부모 코멘트를 가져옴
+			
+			
+			User user = getUser("itoolsg");// 유저가 없으면 바로 에러
+
+			if (!user.getUserid().equals(board.getUser().getUserid()))
+				throw new InvalidUserException("this is not yours");
+			
+			board.deleteComments(commentRepository);
+			
+			boardRepository.delete(id);
+			return true;// .save(comment);
+
+		} catch (InvalidUserException e) {
+			return WebError.error("is Not User", "당신이 쓴 글이 아닙니다.");
+		} catch (NoBoardException e) {
+			return WebError.error("No Post", "없는 게시글이나 삭제된 게시글입니다.");
+		} catch (NoUserException e) {
+			return WebError.error("No User", "잘못된 회원입니다.");
+		} catch (Exception e) {
+
+		}
+		return null;
+
 	}
 }

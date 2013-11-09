@@ -176,6 +176,8 @@ public class CommentController extends defaultController {
 	 * @exception NoBoardException
 	 * @exception NoUserException
 	 * @exception NoLoginException
+	 * @exception NoCommentException
+	 * @exception InvalidUserException
 	 * @param id
 	 *            게시글 아이디
 	 * @param comment_id
