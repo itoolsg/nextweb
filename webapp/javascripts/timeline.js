@@ -15,7 +15,8 @@ window.onload = function() {
 		var ele = getElement(e);
 
 		if (ele.getAttribute("class") == "comments-show")
-			toggleCommnets(e);
+			toggleCommnets(e);//댓글 보기
+		
 		else if (checkTag(e, "BUTTON") && ele.getAttribute("submit") == "comment")
 			writeComment(e);
 
@@ -29,7 +30,7 @@ window.onload = function() {
 			deleteBoard(e);
 		
 		else if (ele.getAttribute("class") == "thumbnail")
-			showThumbnail(e);
+			showThumbnail(e);//이미지 확대
 
 		return false;
 	}
@@ -39,8 +40,11 @@ window.onload = function() {
 		var eleForm = getElement(e).form;
 
 		var comment_area = eleForm.parentNode.parentNode
+		//<div class="comments-show-area">
+		
 		var comments = comment_area.parentNode;
-
+		//<div class="comments">
+		
 		var oFormData = new FormData(eleForm); // form data들을 자동으로 묶어준다.
 
 		var sID = eleForm[0].value; // // 현재페이지의 ID값을 확인한다.! !
@@ -48,7 +52,9 @@ window.onload = function() {
 
 		var request = new XMLHttpRequest();
 		request.open("POST", url, true);
+		
 		request.onreadystatechange = function() {
+			
 			if (request.readyState == 4 && request.status == 200) {
 				console.log("hello");
 
@@ -64,7 +70,9 @@ window.onload = function() {
 					alert("FAIL");
 					return false;
 				}
+				
 				var eleCommentList = eleForm.parentNode.previousElementSibling;
+				//<ul class="comments-list">
 
 				html = getClassFirstElement(document, "commentSample").innerHTML;
 				html = replaceAll(html, "{comment.id}", obj.id);
@@ -75,10 +83,9 @@ window.onload = function() {
 				eleCommentList.insertAdjacentHTML("beforeend", html);
 				eleForm.reset();
 
-				
 
 				// 카운트
-				openComments(comments);
+				openComments(comments);//오픈할때 style.height가 댓글들의 크기만큼 증가한다.
 				countComment(comments);
 			}
 		};

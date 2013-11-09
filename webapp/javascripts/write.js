@@ -13,7 +13,13 @@ var writeBoard = function(e) {
 	request.onreadystatechange = function() {
 		if (request.readyState == 4 && request.status == 200) {
 			console.log("hello");
-			var obj = JSON.parse(request.responseText);
+			var obj;
+			try {
+				obj = JSON.parse(request.responseText);
+			} catch (e) {
+				alert("실패");
+				return false;
+			}
 			var writeDocument = getClassFirstElement(document, "writeDocument");
 			var sample = getClassFirstElement(document, "boardSample");
 			var html = sample.innerHTML;
