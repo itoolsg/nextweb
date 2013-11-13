@@ -1,4 +1,30 @@
+var scrolling = function(e) {
+	var scroll = document.documentElement.scrollTop || document.body.scrollTop;
+	var clouds = $("classAll:cloud");
+	var h = window.innerHeight || document.documentElement.clientHeight
+			|| document.body.clientHeight;
+
+	Day.each(clouds, function(index) {
+		var y = scroll + h
+				- (scroll * parseFloat(this.attr("speed")) + h / 4 * index)
+				% (h + this.height());
+
+		var wheel = Math.floor((scroll * parseFloat(this.attr("speed")) + h / 4
+				* index)
+				/ (h + this.height()));
+		if(wheel < 0) wheel = 0;
+		
+		var pos = this.find("img").attr("positions").split(",");
+		this.css("left", pos[wheel%3]);
+		this.css("top", y + "px");
+
+	});
+};
+window.onscroll = scrolling;
+window.onresize = scrolling;
 window.onload = function() {
+	scrolling();
+	
 	var timeline = getClassFirstElement(document, "documents");
 	var blackscreen = document.getElementById("blackscreen");
 	var img_screen = document.getElementById("thumb-screen");
@@ -12,25 +38,24 @@ window.onload = function() {
 
 	var timelineclick = function(e) {
 
-		var ele = getElement(e);
+		var ele = $e(e);
 
 		if (ele.getAttribute("class") == "comments-show")
-			toggleCommnets(e);//댓글 보기
-		
-		else if (checkTag(e, "BUTTON") && ele.getAttribute("submit") == "comment")
+			toggleCommnets(e);// 댓글 보기
+		else if (ele.tagName === "BUTTON"
+				&& ele.getAttribute("submit") == "comment")
 			writeComment(e);
-
-		else if (checkTag(e, "BUTTON") && ele.getAttribute("submit") == "board")
+		else if (ele.tagName === "BUTTON"
+				&& ele.getAttribute("submit") == "board")
 			writeBoard(e);
-		
-		else if (checkTag(e, "A") && ele.getAttribute("class") == "comment-delete")
+		else if (ele.tagName == "A"
+				&& ele.getAttribute("class") == "comment-delete")
 			deleteComment(e);
-		
-		else if (checkTag(e, "A") && ele.getAttribute("class") == "board-delete")
+		else if (ele.tagName == "A"
+				&& ele.getAttribute("class") == "board-delete")
 			deleteBoard(e);
-		
 		else if (ele.getAttribute("class") == "thumbnail")
-			showThumbnail(e);//이미지 확대
+			showThumbnail(e);// 이미지 확대
 
 		return false;
 	}
@@ -39,12 +64,6 @@ window.onload = function() {
 		e.preventDefault(); // submit 이 자동으로 동작하는 것을 막는다.
 		var eleForm = getElement(e).form;
 
-		var comment_area = eleForm.parentNode.parentNode
-		//<div class="comments-show-area">
-		
-		var comments = comment_area.parentNode;
-		//<div class="comments">
-		
 		var oFormData = new FormData(eleForm); // form data들을 자동으로 묶어준다.
 
 		var sID = eleForm[0].value; // // 현재페이지의 ID값을 확인한다.! !
@@ -52,11 +71,11 @@ window.onload = function() {
 
 		var request = new XMLHttpRequest();
 		request.open("POST", url, true);
-		
+
 		request.onreadystatechange = function() {
-			
+
 			if (request.readyState == 4 && request.status == 200) {
-				console.log("hello");
+				console.log("get Request");
 
 				var obj;
 				try {
@@ -70,9 +89,12 @@ window.onload = function() {
 					alert("FAIL");
 					return false;
 				}
-				
-				var eleCommentList = eleForm.parentNode.previousElementSibling;
-				//<ul class="comments-list">
+				var comments_area = $(eleForm).parent(2);
+				// <div class="comments-area">
+				var comments = comments_area.parent();
+				// <div class="comments">
+				var eleCommentList = $(comments, "class:comments-list");
+				// <ul class="comments-list">
 
 				html = getClassFirstElement(document, "commentSample").innerHTML;
 				html = replaceAll(html, "{comment.id}", obj.id);
@@ -80,12 +102,11 @@ window.onload = function() {
 				html = replaceAll(html, "{comment.userid}", obj.user.userid);
 				html = replaceAll(html, "{comment.bid}", obj.bid);
 
-				eleCommentList.insertAdjacentHTML("beforeend", html);
+				eleCommentList.insert("beforeend", html);
 				eleForm.reset();
 
-
 				// 카운트
-				openComments(comments);//오픈할때 style.height가 댓글들의 크기만큼 증가한다.
+				openComments(comments);// 오픈할때 style.height가 댓글들의 크기만큼 증가한다.
 				countComment(comments);
 			}
 		};
@@ -96,10 +117,9 @@ window.onload = function() {
 		console.log("deleteComment");
 		e.preventDefault(); // submit 이 자동으로 동작하는 것을 막는다.
 
-		var element = getElement(e);// 삭제 버튼
-
-		var board_id = element.getAttribute("board_id");// 이건 조금 다시 수정해야 할 ㅋ 안좋은
-		// 방식
+		var element = $e(e);// 삭제 버튼
+		var board = element.parent("class:board");
+		var board_id = board.getAttribute("board_id");
 		var comment_id = element.getAttribute("comment_id");
 
 		var url = "/board/" + board_id + "/" + comment_id
@@ -109,19 +129,16 @@ window.onload = function() {
 		request.open("POST", url, true);
 		request.onreadystatechange = function() {
 			if (request.readyState == 4 && request.status == 200) {
-				console.log("hello");
+				console.log("get Request");
 
 				if (request.responseText === "true") {
 					alert("삭제 되었습니다.");
 
-					var bElement = document.getElementById("board" + board_id);
-					var comment = document.getElementById("comment"
-							+ comment_id);
-					var comments = getClassFirstElement(bElement, "comments");
-					var comments_list = getClassFirstElement(comments,
-							"comments-list");
-					comments_list.removeChild(comment);
-					
+					var comment = element.parent();
+					var comments = $(board, "class:comments");
+					var comments_list = $(board, "class:comments-list");
+					comments_list.remove(comment);
+
 					openComments(comments);
 					countComment(comments);
 					return true;
@@ -147,13 +164,16 @@ window.onload = function() {
 		request.send();
 	}
 	var showThumbnail = function(e) {
-		var src = ele.getAttribute("src");
+		var element = $e(e);
+		var src = element.attr("src");
+
 		blackscreen.style.display = "block";
 		img_screen.style.display = "block";
 		document.body.style.overflow = "hidden";
-		if (ele.naturalWidth) {
-			img_screen.style.marginLeft = -ele.naturalWidth / 2 + "px";
-			img_screen.style.marginTop = -ele.naturalHeight / 2 + "px";
+
+		if (element.naturalWidth) {
+			img_screen.style.marginLeft = -element.naturalWidth / 2 + "px";
+			img_screen.style.marginTop = -element.naturalHeight / 2 + "px";
 		} else {
 			// Using an Image Object
 			var img = new Image();
@@ -167,45 +187,47 @@ window.onload = function() {
 		screen_thumb.setAttribute("src", src);
 	}
 	var toggleCommnets = function(e) {
-		var element = getElement(e);
-		var parent = element.parentNode.parentNode;
-		var comments = getClassFirstElement(parent, "comments-list");
-		var comment_reply = getClassFirstElement(parent, "main-comment-reply");
-		var comment_area = getClassFirstElement(parent, "comment-area");
+		var element = $e(e);
+		var comments = element.parent(2);
+		var comments_area = comments.find(".comments-area");
+		var comments_list = comments.find(".comments-list");
+		var comment_reply = comments.find(".main-comment-reply");
 
-		if (comment_area.getAttribute("is_open") == "true") {
-			element.innerText = "댓글 보기";
-			comment_area.style.height = 0 + "px";
-			comment_area.setAttribute("is_open", "false");
+		if (comments_area.attr("is_open") == "true") {
+			element.html("댓글 보기");
+			comments_area.css("height", 0 + "px");
+			comments_area.attr("is_open", "false");
 		} else {
-			element.innerText = "댓글 접기";
-			comments.style.display = "block";
-			comment_reply.style.display = "block";
-			comment_area.style.height = comments.offsetHeight
-					+ comment_reply.offsetHeight + 16 + "px";
-			comment_area.setAttribute("is_open", "true");
+			element.html("댓글 접기");
+			comments_list.css("display", "block");
+			comment_reply.css("display", "block");
+
+			comments_area.css("height", comments_list.outerHeight()
+					+ comment_reply.outerHeight() + 16 + "px");
+			comments_area.setAttribute("is_open", "true");
 		}
 		e.preventDefault();
 	}
 	var countComments = function() {// 코멘트 세기
 		var comments = document.getElementsByClassName("comments");// 코멘트 영역
-		for ( var i = 0; i < comments.length; i++) {
-			countComment(comments[i]);
-		}
+		Day.each(comments, function() {
+			countComment(this);
+		});
 	}
 	var openComments = function(comments) {
-		var comment_area = getClassFirstElement(comments, "comment-area");
-		var comments_list = getClassFirstElement(comment_area, "comments-list");
-		var comment_reply = getClassFirstElement(comment_area,
-				"main-comment-reply");
-		comment_area.style.height = comments_list.offsetHeight
-				+ comment_reply.offsetHeight + 16 + "px";
-		comment_area.setAttribute("is_open", "true");
+		var comments_area = $(comments, "class:comments-area");
+		var comments_list = $(comments_area, "class:comments-list");
+		var comment_reply = $(comments_area, "class:main-comment-reply");
+
+		comments_area.css("height", comments_list.outerHeight()
+				+ comment_reply.outerHeight() + 16 + "px");
+
+		comments_area.setAttribute("is_open", "true");
 	}
 	var countComment = function(comments) {
-		var count_area = getClassFirstElement(comments, "commentCount");// 코멘트
-		var length = comments.getElementsByTagName("li").length;
-		count_area.innerText = length + "개의 댓글";
+		var count_area = $(comments, "class:commentCount");// 코멘트
+		var length = $(comments, "tag:li").length;
+		count_area.html(length + "개의 댓글");
 	}
 
 	// 블랙스크린에서 이미지의 이동

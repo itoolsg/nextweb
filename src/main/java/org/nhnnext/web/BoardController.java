@@ -3,16 +3,17 @@ package org.nhnnext.web;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.nhnnext.exception.EmptyStringException;
 import org.nhnnext.exception.InvalidUserException;
 import org.nhnnext.exception.NoBoardException;
-import org.nhnnext.exception.NoCommentException;
 import org.nhnnext.exception.NoLoginException;
 import org.nhnnext.exception.NoUserException;
 import org.nhnnext.log.Mylog;
 import org.nhnnext.support.FileUploader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/board")
 public class BoardController extends defaultController {
 
+	private static final Logger log = LoggerFactory
+			.getLogger(BoardController.class);
+
 	/**
 	 * Title : 리스트 보기, 글쓰기 페이지 합치기
 	 * <p>
@@ -38,6 +42,7 @@ public class BoardController extends defaultController {
 	 */
 	@RequestMapping("")
 	public String showTimeLine(Model model) {
+
 		Iterable<Board> iterable = boardRepository.findAll();
 		Iterator<Board> iterator = iterable.iterator();
 
@@ -158,8 +163,9 @@ public class BoardController extends defaultController {
 	 *            세션(웬지 있을 거 같은 기분)
 	 * */
 	@RequestMapping(value = "/write.json", method = RequestMethod.POST)
-	public @ResponseBody Object writeXHR(Board board, MultipartFile file, HttpSession session) {
-
+	public @ResponseBody
+	Object writeXHR(Board board, MultipartFile file, HttpSession session) {
+		log.debug("board : {}", board);
 		try {
 			User user = getUser("itoolsg");
 			board.setUser(user);// 게시자 입력
@@ -172,15 +178,15 @@ public class BoardController extends defaultController {
 				board.setFilename(filename);
 
 			// 저장
-			//Board savedBoard = ;
-			
+			// Board savedBoard = ;
+
 			return boardRepository.save(board);
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
 			return WebError.error("No Contents", "내용을 입력해주세요.");
-//		} catch (NoLoginException e) {
-//			return "redirect:/user/login";
-		}  catch (NoUserException e) {
+			// } catch (NoLoginException e) {
+			// return "redirect:/user/login";
+		} catch (NoUserException e) {
 			return WebError.error("No User", "잘못된 회원입니다.");
 		} catch (Exception e) {
 			Mylog.printError(e);
@@ -348,11 +354,12 @@ public class BoardController extends defaultController {
 		}
 		return "redirect:/board";
 	}
+
 	/**
 	 * Title : 글을 삭제 과정 XHR
 	 * 
 	 * <p>
-	 * http://localhost:8080/board/100/comment_delete.json
+	 * http://localhost:8080/board/100/board_delete.json
 	 * </p>
 	 * 
 	 * @see Board, User
@@ -369,19 +376,18 @@ public class BoardController extends defaultController {
 	@RequestMapping(value = "/{id}/board_delete.json", method = RequestMethod.POST)
 	public @ResponseBody
 	Object deleteBoard(@PathVariable Long id, HttpSession session) {
-		
+
 		try {
 			Board board = getBoard(id);
 			// 해당하는 부모 코멘트를 가져옴
-			
-			
-			User user = getUser("itoolsg");// 유저가 없으면 바로 에러
+
+			User user = getLoginUser(session);// 유저가 없으면 바로 에러
 
 			if (!user.getUserid().equals(board.getUser().getUserid()))
 				throw new InvalidUserException("this is not yours");
-			
+
 			board.deleteComments(commentRepository);
-			
+
 			boardRepository.delete(id);
 			return true;// .save(comment);
 
@@ -391,6 +397,8 @@ public class BoardController extends defaultController {
 			return WebError.error("No Post", "없는 게시글이나 삭제된 게시글입니다.");
 		} catch (NoUserException e) {
 			return WebError.error("No User", "잘못된 회원입니다.");
+		} catch (NoLoginException e) {
+			return WebError.error("No Login User", "로그인을 해주세요.");
 		} catch (Exception e) {
 
 		}

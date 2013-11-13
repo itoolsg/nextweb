@@ -20,12 +20,12 @@ var writeBoard = function(e) {
 				alert("실패");
 				return false;
 			}
-			var writeDocument = getClassFirstElement(document, "writeDocument");
-			var sample = getClassFirstElement(document, "boardSample");
-			var html = sample.innerHTML;
+			var writeDocument = $(document, "class:writeDocument");
+			var sample = $(document, "class:boardSample");
+			var html = sample.html();
 			var is_img = (obj.filename == null) ? "none" : "block";
 
-			html = html.replace("{is_image}", is_img);
+			html = html.replace("{is_image", is_img);
 
 			if (is_img == "block") {
 				html = html.replace("{document.filename}", obj.filename);
@@ -39,7 +39,7 @@ var writeBoard = function(e) {
 			html = html.replace("{document.title}", obj.title);
 			html = html.replace("{document.contents}", obj.contents);
 
-			writeDocument.insertAdjacentHTML("afterend", html);
+			writeDocument.insert("afterend", html);
 			eleForm.reset();
 		}
 	};
@@ -49,25 +49,21 @@ var deleteBoard = function(e) {
 	console.log("deleteBoard");
 	e.preventDefault(); // submit 이 자동으로 동작하는 것을 막는다.
 
-	var element = getElement(e);// 삭제 버튼
-	
-	var board = element.parentNode.parentNode;
-	
-	var board_id = board.getAttribute("board");// 이건 조금 다시 수정해야 할 ㅋ 안좋은
+	var element = $e(e);// 삭제 버튼
 
-	var url = "/board/" + board_id + "/board_delete.json"; // 서버로
-																				// 보낼
-																				// 주소!
-
+	var board = element.parent("class:board");
+	var board_id = board.getAttribute("board_id");
+	var url = "/board/" + board_id + "/board_delete.json"; // 서버로 보낼 주소
+	
 	var request = new XMLHttpRequest();
 	request.open("POST", url, true);
 	request.onreadystatechange = function() {
 		if (request.readyState == 4 && request.status == 200) {
-			console.log("hello");
+			console.log("get Request");
 			if (request.responseText === "true") {
 				alert("삭제 되었습니다.");
-				var documents = getClassFirstElement(document, "documents");				
-				documents.removeChild(board);
+				var documents = $(document, "class:documents");
+				documents.remove(board);
 				return true;
 			}
 			try {

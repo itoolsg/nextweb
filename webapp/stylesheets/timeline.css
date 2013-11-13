@@ -30,6 +30,11 @@ body {
 	display:none;
 	z-index:7;
 }
+
+.cloud {
+	position:absolute;
+	
+}
 .timelineContainer {
 	width: 700px;
 	margin: 2px auto;
@@ -230,7 +235,7 @@ p.fright {
 	float:right;
 }
 
-.comment-area {
+.comments-area {
 	position:relative;
 	overflow:hidden;
 	transition: all ease-in-out 0.5s;
@@ -238,9 +243,6 @@ p.fright {
 	-o-transition: all ease-in-out 0.5s;
 	-webkit-transition: all ease-in-out 0.5s;
 	height:0px;	
-}
-.comments {
-	
 }
 .comments-list {
 	display:none;
@@ -251,17 +253,18 @@ p.fright {
 	-ms-transition:top 1s;
 	-moz-transition:top 1s;
 	-o-transtion:top 1s; */
+	overflow:hidden;
 	z-index:1;
 }
 
 .comments-list li {
-	margin:5px 0px;
+	
 	background:none;
 	border:0;
 	overflow: hidden;
 	min-height:0;
-	padding:0;
-	margin:0;
+	margin:3px 0px 7px;
+	padding:5px 0px;
 	position:relative;
 }
 .comments-list li li{

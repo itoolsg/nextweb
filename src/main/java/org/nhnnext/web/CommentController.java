@@ -1,5 +1,6 @@
 package org.nhnnext.web;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.nhnnext.exception.EmptyStringException;
@@ -9,9 +10,6 @@ import org.nhnnext.exception.NoCommentException;
 import org.nhnnext.exception.NoLoginException;
 import org.nhnnext.exception.NoUserException;
 import org.nhnnext.log.Mylog;
-import org.nhnnext.repository.BoardRepository;
-import org.nhnnext.repository.CommentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -138,15 +136,18 @@ public class CommentController extends defaultController {
 	 * @param contents
 	 *            코멘트 글
 	 * @param session
-	 *            세션(웬지 있을 거 같은 기분)
+	 *            세션
 	 * */
 	@RequestMapping(value = "/{id}/comments.json", method = RequestMethod.POST)
 	public @ResponseBody
-	Object createAndShow(@PathVariable Long id, String contents) {
+	Object createAndShow(@PathVariable Long id, String contents,
+			HttpSession session) {
 		try {
 			if (contents == null || contents == "")
 				throw new EmptyStringException("No Comment contents");
-			User user = getUser("itoolsg");// 유저가 없으면 바로 에러
+
+			User user = getLoginUser(session);
+			// User user = getUser("itoolsg");// 유저가 없으면 바로 에러
 			Board board = getBoard(id);
 			Comment comment = new Comment(board, contents);
 			comment.setUser(user);
@@ -159,10 +160,11 @@ public class CommentController extends defaultController {
 			return WebError.error("No Contents", "내용을 입력해주세요.");
 		} catch (NoUserException e) {
 			return WebError.error("No User", "잘못된 회원입니다.");
+		} catch (NoLoginException e) {
+			return WebError.error("No Login User", "로그인을 해주세요.");
 		} catch (Exception e) {
-
+			return null;
 		}
-		return null;
 	}
 
 	/**
@@ -183,18 +185,19 @@ public class CommentController extends defaultController {
 	 * @param comment_id
 	 *            코멘트 아이디
 	 * @param session
-	 *            세션(웬지 있을 거 같은 기분)
+	 *            세션
 	 * */
 	@RequestMapping(value = "/{id}/{comment_id}/comment_delete.json", method = RequestMethod.POST)
 	public @ResponseBody
-	Object deleteComment(@PathVariable Long id, @PathVariable Long comment_id,HttpSession session) {
-		
+	Object deleteComment(@PathVariable Long id, @PathVariable Long comment_id,
+			HttpSession session) {
+
 		try {
 			Board board = getBoard(id);
 			// 해당하는 부모 코멘트를 가져옴
 			Comment parentComment = getComment(comment_id);
 			parentComment.deleteComments(commentRepository);
-			User user = getUser("itoolsg");// 유저가 없으면 바로 에러
+			User user = getLoginUser(session);// 유저가 없으면 바로 에러
 
 			if (!user.getUserid().equals(parentComment.getUser().getUserid()))
 				throw new InvalidUserException("this is not yours");
@@ -211,6 +214,8 @@ public class CommentController extends defaultController {
 			return WebError.error("No User", "잘못된 회원입니다.");
 		} catch (NoCommentException e) {
 			return WebError.error("No Comment", "없거나 삭제된 코멘트입니다.");
+		} catch (NoLoginException e) {
+			return WebError.error("No Login User", "로그인을 해주세요.");
 		} catch (Exception e) {
 
 		}

@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" />
 <link rel="stylesheet" type="text/css" href="/stylesheets/timeline.css" />
 <script src="/javascripts/default.js" type="text/javascript"></script>
+<script src="/javascripts/day.js" type="text/javascript"></script>
 <script src="/javascripts/write.js" type="text/javascript"></script>
 <script src="/javascripts/timeline.js" type="text/javascript"></script>
 
@@ -49,18 +50,13 @@
 	<div id="sample">
 		<ul class="commentSample">
 			<li id='comment{comment.id}'>
-				<div class='comment-list'>
-					<div class='comment-indent'>
-						<p class='comment-writer'>{comment.userid}</p>
-						<p class="comment-contents">{comment.contents}</p>
-						<a href="#" class='comment-delete' board_id="{comment.bid}"
-							comment_id="{comment.id}">x</a>
-					</div>
-				</div>
+				<p class='comment-writer'>{comment.userid}</p>
+				<p class="comment-contents">{comment.contents}</p> <a href="#"
+				class='comment-delete' comment_id="{comment.id}">x</a>
 			</li>
 		</ul>
 		<ul class="boardSample">
-			<li class="timeDocument" id="board{document.id}" board="{document.id}">
+			<li class="board" id="board{document.id}" board_id="{document.id}">
 				<div class="contents">
 					<a class="board-delete" href="#">x</a>
 					<p>
@@ -80,23 +76,30 @@
 
 					<div class="comments">
 						<div class="comments-show-area">
-							<p class="commentCount">0개의 댓글</p>
+							<p class="commentCount">
+								<c:choose>
+									<c:when test="${not empty document.comments}">
+								${document.comments.size()}개의 댓글
+							</c:when>
+									<c:otherwise>
+								0개의 댓글. &nbsp; &nbsp; 댓글을 달아주세요.
+							</c:otherwise>
+								</c:choose>
+							</p>
 							<a class="comments-show" href="#">댓글 보기</a>
 						</div>
-						<div class="comment-area">
+						<div class="comments-area">
 							<ul class="comments-list">
 							</ul>
 							<div class="main-comment-reply comment-reply needLogin">
 								<form action="/board/{document.id}/comment_ok" method="post">
 									<input type="hidden" name="id" value="{document.id}" /> <span><textarea
 											name="contents" cols="50" rows="3" placeholder="글쓰세요."></textarea>
-										<button submit="comment">작성</button></span>
+										<button submit='comment'>작성</button></span>
 								</form>
 							</div>
 						</div>
 					</div>
-
-
 				</div>
 			</li>
 		</ul>
@@ -107,6 +110,22 @@
 		</div>
 	</div>
 
+	<div class="cloud" speed="1.2">
+		<span></span> <img src="/img/bg_highClouds.png" alt="high cloud"
+			speed="1.2" positions="10%,30%,50%" pos=0 />
+	</div>
+	<div class="cloud" speed="1.8">
+		<span></span> <img src="/img/bg_lowClouds.png" alt="high cloud"
+			speed="1.8" positions="0%,20%,50%" pos=0 />
+	</div>
+	<div class="cloud" speed="1.5">
+		<span></span> <img src="/img/bg_lowClouds.png" alt="high cloud"
+			speed="1.5" positions="-10%,55%,35%" pos=0 />
+	</div>
+	<div class="cloud" speed="1.1">
+		<span></span> <img src="/img/bg_lowClouds.png" alt="high cloud"
+			speed="1.1" positions="35%,5%,50%" pos=0 />
+	</div>
 	<div class="timelineContainer">
 		<div class="top-menu">
 			<c:choose>
@@ -146,8 +165,7 @@
 				</div>
 			</li>
 			<c:forEach var="document" items="${boards}">
-				<li id="board${document.id}"
-					board="${document.id}">
+				<li class="board" id="board${document.id}" board_id="${document.id}">
 					<div class="contents">
 						<a class="board-delete" href="#">x</a>
 						<p>
@@ -181,18 +199,14 @@
 								</p>
 								<a class="comments-show" href="#">댓글 보기</a>
 							</div>
-							<div class="comment-area">
+							<div class="comments-area">
 								<ul class="comments-list">
 									<c:forEach var="comment" items="${document.comments}">
 										<li id='comment${comment.id}'>
-											<div class='comment-list'>
-												<div class='comment-indent'>
-													<p class='comment-writer'>${comment.user.userid}</p>
-													<p class="comment-contents">${comment.contents}</p>
-													<a href="#" class='comment-delete'
-														board_id="${document.id}" comment_id="${comment.id}">x</a>
-												</div>
-											</div>
+											<p class='comment-writer'>${comment.user.userid}</p>
+											<p class="comment-contents">${comment.contents}</p> <a
+											href="#" class='comment-delete' board_id="${document.id}"
+											comment_id="${comment.id}">x</a>
 										</li>
 									</c:forEach>
 								</ul>
@@ -205,8 +219,6 @@
 								</div>
 							</div>
 						</div>
-
-
 					</div>
 				</li>
 			</c:forEach>
