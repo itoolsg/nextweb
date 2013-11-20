@@ -66,9 +66,10 @@ public class defaultController {
 
 		User user = userRepository.findOne(userid);
 
-		if (user == null)
+		if (user == null) {
+			session.removeAttribute("userid");
 			throw new NoUserException(session); // 해당하는 유저가 없을 때
-
+		}
 		return user;
 	}
 

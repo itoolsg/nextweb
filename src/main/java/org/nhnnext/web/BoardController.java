@@ -80,19 +80,22 @@ public class BoardController extends defaultController {
 	 *             ,NoLoginException
 	 */
 	@RequestMapping("/form")
-	public String showForm(HttpSession session) {
+	public String showForm(HttpSession session, Model model) {
 
 		try {
 			User user = getLoginUser(session);
 			return "form";
 		} catch (NoUserException e) {
-			return "redirect:/user/login";
+			return WebError.showError(model, Strings.ERR_NOUSER,
+					Strings.LINK_LOGIN);
 		} catch (NoLoginException e) {
-			return "redirect:/user/login";
+			return WebError.showError(model, Strings.ERR_NEEDLOGIN,
+					Strings.LINK_LOGIN);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "redirect:/";
+		return WebError
+				.showError(model, Strings.ERR_UNKNOWN, Strings.LINK_HOME);
 	}
 
 	/**
@@ -110,12 +113,12 @@ public class BoardController extends defaultController {
 	 * */
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
 	public String write(Board board, String modify, MultipartFile file,
-			HttpSession session) {
+			HttpSession session, Model model) {
 
 		// 수정하는지 판단
 		// modify가 1일시 수정으로 판단.
 		if (modify != null && modify.equals("1"))
-			return modify(board, file, session);
+			return modify(board, file, session, model);
 
 		try {
 			User user = getLoginUser(session);
@@ -130,15 +133,19 @@ public class BoardController extends defaultController {
 
 			// 저장
 			Board savedBoard = boardRepository.save(board);
-
+			log.info("Add Board : {}", savedBoard);
 			return "redirect:/board";
 		} catch (NullPointerException e) {
-			Mylog.printError(e);
-		} catch (NoUserException e) {//
+			return WebError.showError(model, Strings.ERR_NOCONTENTS,
+					Strings.LINK_BACK);
+		} catch (NoUserException e) {
+			return WebError.showError(model, Strings.ERR_NOUSER,
+					Strings.LINK_LOGIN);
 		} catch (NoLoginException e) {
-			return "redirect:/user/login";
+			return WebError.showError(model, Strings.ERR_NEEDLOGIN,
+					Strings.LINK_LOGIN);
 		} catch (Exception e) {
-			Mylog.printError(e);
+
 		}
 		return "redirect:/board";
 	}
@@ -180,16 +187,18 @@ public class BoardController extends defaultController {
 			// 저장
 			// Board savedBoard = ;
 
-			return boardRepository.save(board);
+			Board savedBoard = boardRepository.save(board);
+			log.info("XHR Add Board : {}", savedBoard);
+			return savedBoard;
 		} catch (NullPointerException e) {
-			Mylog.printError(e);
+			// Mylog.printError(e);
 			return WebError.error("No Contents", "내용을 입력해주세요.");
 			// } catch (NoLoginException e) {
 			// return "redirect:/user/login";
 		} catch (NoUserException e) {
 			return WebError.error("No User", "잘못된 회원입니다.");
 		} catch (Exception e) {
-			Mylog.printError(e);
+			// Mylog.printError(e);
 		}
 		return null;
 	}
@@ -213,7 +222,8 @@ public class BoardController extends defaultController {
 	 * @exception NoUserException
 	 *                ,NoLoginException, NoBoardException
 	 * */
-	private String modify(Board board, MultipartFile file, HttpSession session) {
+	private String modify(Board board, MultipartFile file, HttpSession session,
+			Model model) {
 		try {
 			User user = getLoginUser(session);
 
@@ -221,10 +231,9 @@ public class BoardController extends defaultController {
 			Board originalBoard = getBoard(id);
 
 			// No match ERROR
-			if (!originalBoard.matchId(user.getUserid())) { // 게시자가 아닐 때
-				System.out.println("No Match Err");
-				return "redirect:/board/" + id;
-			}
+			if (!originalBoard.matchId(user.getUserid())) // 게시자가 아닐 때
+				return WebError.showError(model, Strings.ERR_NOWRITER,
+						Strings.LINK_BACK);
 
 			// 파일 이름을 원래의 파일로 저장을 해놓음
 			// 수정해서 파일을 고치지 않을시 board의 filename은 null이다.
@@ -240,14 +249,27 @@ public class BoardController extends defaultController {
 
 			// 수정
 			Board savedBoard = boardRepository.save(board);
-		} catch (NoUserException e) {
-		} catch (NoLoginException e) {
-			return "redirect:/user/login";
+
+			log.info("Modify Board : {}", savedBoard);
+		}  catch (IllegalArgumentException e) {
+			return WebError.showError(model, Strings.ERR_NOBOARD,
+					Strings.LINK_LIST);
 		} catch (NoBoardException e) {
+			return WebError.showError(model, Strings.ERR_NOBOARD,
+					Strings.LINK_LIST);
+		} catch (NullPointerException e) {
+			return WebError.showError(model, Strings.ERR_NOCONTENTS,
+					Strings.LINK_BACK);
+		} catch (NoUserException e) {
+			return WebError.showError(model, Strings.ERR_NOUSER,
+					Strings.LINK_LOGIN);
+		} catch (NoLoginException e) {
+			return WebError.showError(model, Strings.ERR_NEEDLOGIN,
+					Strings.LINK_LOGIN);
 		} catch (Exception e) {
-			Mylog.printError(e);
+
 		}
-		return "redirect:/board/" + board.getId();// view페이지로 갑니다.
+		return "redirect:/board#board" + board.getId();// view페이지로 갑니다.
 	}
 
 	/**
@@ -271,10 +293,10 @@ public class BoardController extends defaultController {
 			return "show";
 		} catch (NullPointerException e) {
 			// 게시물 존재 X
-			Mylog.printError(e);
+			// Mylog.printError(e);
 		} catch (NoBoardException e) {
 		} catch (Exception e) {
-			Mylog.printError(e);
+			// Mylog.printError(e);
 		}
 		return "redirect:/board";
 
@@ -287,8 +309,19 @@ public class BoardController extends defaultController {
 	 * </p>
 	 * 
 	 * @see Board
-	 * @throws NullPointerException
-	 *             if board is null
+	 * @throws IllegalArgumentException
+	 *             if document is not in BOARD db
+	 * 
+	 * @exception NoBoardException
+	 * @exception NoUserException
+	 * @exception NoLoginException
+	 * 
+	 * @param id
+	 *            게시글 아이디
+	 * @param session
+	 *            세션
+	 * @param model
+	 * 
 	 * */
 	@RequestMapping("/{id}/modify")
 	public String showModifyForm(@PathVariable Long id, Model model,
@@ -297,25 +330,31 @@ public class BoardController extends defaultController {
 			User user = getLoginUser(session);
 			Board board = getBoard(id);
 
-			if (!board.matchId(user.getUserid())) { // 게시자가 아닐 때
-				// No match ERROR
-				System.out.println("No Match Err");
-				return "redirect:/board/" + id;
-			}
+			if (!board.matchId(user.getUserid())) // 게시자가 아닐 때
+				return WebError.showError(model, Strings.ERR_NOWRITER,
+						Strings.LINK_BACK);
+
 			model.addAttribute("board", board);
 			model.addAttribute("modify", 1);// 수정표시
 
 			return "form";
-		} catch (NullPointerException e) {
-			// 해당하는 id값이 없음.
-			Mylog.printError(e);
-			return "redirect:/board";
-		} catch (NoUserException e) {
-		} catch (NoLoginException e) {
-			return "redirect:/user/login";
+		}  catch (IllegalArgumentException e) {
+			return WebError.showError(model, Strings.ERR_NOBOARD,
+					Strings.LINK_LIST);
 		} catch (NoBoardException e) {
+			return WebError.showError(model, Strings.ERR_NOBOARD,
+					Strings.LINK_LIST);
+		} catch (NullPointerException e) {
+			return WebError.showError(model, Strings.ERR_NOCONTENTS,
+					Strings.LINK_BACK);
+		} catch (NoUserException e) {
+			return WebError.showError(model, Strings.ERR_NOUSER,
+					Strings.LINK_LOGIN);
+		} catch (NoLoginException e) {
+			return WebError.showError(model, Strings.ERR_NEEDLOGIN,
+					Strings.LINK_LOGIN);
 		} catch (Exception e) {
-			e.printStackTrace();
+
 		}
 		return "redirect:/board/" + id;
 	}
@@ -329,28 +368,49 @@ public class BoardController extends defaultController {
 	 * @see Board
 	 * @throws IllegalArgumentException
 	 *             if document is not in BOARD db
+	 * 
+	 * @exception NoBoardException
+	 * @exception NoUserException
+	 * @exception NoLoginException
+	 * 
+	 * @param id
+	 *            게시글 아이디
+	 * @param session
+	 *            세션
+	 * @param model
+	 *            모델
+	 * 
 	 * */
 	@RequestMapping("/{id}/delete")
-	public String delete(@PathVariable Long id, HttpSession session) {
+	public String delete(@PathVariable Long id, HttpSession session, Model model) {
 		try {
 			User user = getLoginUser(session);
 
 			Board board = getBoard(id);
 			board.deleteComments(commentRepository);
-			if (!board.matchId(user.getUserid())) { // 게시자가 아닐 때
-				// No match ERROR
-				System.out.println("No Match Err");
-				return "redirect:/board/" + id;
-			}
+			if (!board.matchId(user.getUserid())) // 게시자가 아닐 때
+				return WebError.showError(model, Strings.ERR_NOWRITER,
+						Strings.LINK_BACK);
+			
+			log.info("XHR Add Board : {}", board);
 			boardRepository.delete(id);
 		} catch (IllegalArgumentException e) {
-			Mylog.printError(e);// 삭제시 정보가 없을 떄
-		} catch (NoUserException e) {
-		} catch (NoLoginException e) {
-			return "redirect:/user/login";
+			return WebError.showError(model, Strings.ERR_NOBOARD,
+					Strings.LINK_LIST);
 		} catch (NoBoardException e) {
+			return WebError.showError(model, Strings.ERR_NOBOARD,
+					Strings.LINK_LIST);
+		} catch (NullPointerException e) {
+			return WebError.showError(model, Strings.ERR_NOCONTENTS,
+					Strings.LINK_BACK);
+		} catch (NoUserException e) {
+			return WebError.showError(model, Strings.ERR_NOUSER,
+					Strings.LINK_LOGIN);
+		} catch (NoLoginException e) {
+			return WebError.showError(model, Strings.ERR_NEEDLOGIN,
+					Strings.LINK_LOGIN);
 		} catch (Exception e) {
-			e.printStackTrace();
+
 		}
 		return "redirect:/board";
 	}
@@ -371,7 +431,7 @@ public class BoardController extends defaultController {
 	 * @param id
 	 *            게시글 아이디
 	 * @param session
-	 *            세션(웬지 있을 거 같은 기분)
+	 *            세션
 	 * */
 	@RequestMapping(value = "/{id}/board_delete.json", method = RequestMethod.POST)
 	public @ResponseBody
@@ -388,6 +448,7 @@ public class BoardController extends defaultController {
 
 			board.deleteComments(commentRepository);
 
+			log.info("XHR Delete Board : {}", board);
 			boardRepository.delete(id);
 			return true;// .save(comment);
 

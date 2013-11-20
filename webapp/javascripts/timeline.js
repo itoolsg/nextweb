@@ -12,10 +12,11 @@ var scrolling = function(e) {
 		var wheel = Math.floor((scroll * parseFloat(this.attr("speed")) + h / 4
 				* index)
 				/ (h + this.height()));
-		if(wheel < 0) wheel = 0;
-		
+		if (wheel < 0)
+			wheel = 0;
+
 		var pos = this.find("img").attr("positions").split(",");
-		this.css("left", pos[wheel%3]);
+		this.css("left", pos[wheel % 3]);
 		this.css("top", y + "px");
 
 	});
@@ -24,7 +25,7 @@ window.onscroll = scrolling;
 window.onresize = scrolling;
 window.onload = function() {
 	scrolling();
-	
+
 	var timeline = getClassFirstElement(document, "documents");
 	var blackscreen = document.getElementById("blackscreen");
 	var img_screen = document.getElementById("thumb-screen");
@@ -37,7 +38,7 @@ window.onload = function() {
 	var screen_thumb = getClassFirstElement(img_screen, "thumb");
 
 	var timelineclick = function(e) {
-
+		
 		var ele = $e(e);
 
 		if (ele.getAttribute("class") == "comments-show")
@@ -55,7 +56,9 @@ window.onload = function() {
 				&& ele.getAttribute("class") == "board-delete")
 			deleteBoard(e);
 		else if (ele.getAttribute("class") == "thumbnail")
-			showThumbnail(e);// 이미지 확대
+			showThumbnail($e(e));// 이미지 확대
+		else if (ele.getAttribute("class") == "subject")
+			showThumbnail($e(e).parent("class:board").find(".thumbnail"));
 
 		return false;
 	}
@@ -163,8 +166,12 @@ window.onload = function() {
 		};
 		request.send();
 	}
-	var showThumbnail = function(e) {
-		var element = $e(e);
+	var showThumbnail = function(element) {
+
+		if (element.isNull()) {
+			alert("이미지가 없습니다.");
+			return;
+		}
 		var src = element.attr("src");
 
 		blackscreen.style.display = "block";

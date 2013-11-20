@@ -120,7 +120,8 @@ public class Comment {
 
 	@Override
 	public String toString() {
-		return "";
+		return "Comment [id=" + id + ", contents=" + contents + ", board="
+				+ board.getId() + ", user=" + user.getUserid() + "]";
 	}
 
 	public void deleteComments(CommentRepository commentRepository) {

@@ -53,6 +53,21 @@ var Day = {
 }
 var day = function(object) {
 	this._object = object;
+	this.isNull = function() {
+		if(!this._object)
+			return true;
+		
+		return false;
+	}
+	this.addEvent = function(evnt, func) {
+		if (this._object.addEventListener) // W3C DOM
+			this._object.addEventListener(evnt, func, false);
+		else if (this._object.attachEvent) { // IE DOM
+			this._object.attachEvent("on" + evnt, func);
+		} else { // No much to do
+			this._object[evnt] = func;
+		}
+	}
 	this.getAttribute = function(name) {
 		return this._object.getAttribute(name);
 	}
@@ -73,8 +88,6 @@ var day = function(object) {
 		this._object.style[name] = value;
 		return value;
 	}
-
-	this.tagName = this._object.nodeName;
 
 	this.findAll = function(query) {
 		return days(this._object.querySelectorAll(query));
@@ -123,8 +136,9 @@ var day = function(object) {
 			return this._object.innerHTML;
 		
 		this._object.innerHTML = html;
-		
-			
+	}
+	this.click = function(func) {
+		this.addEvent("click", func);
 	}
 	this.text = function(text) {
 		if(!text)
@@ -162,8 +176,11 @@ var day = function(object) {
 		else
 			return this._object.offsetHeight;
 	}
-	this.naturalWidth = this._object.naturalWidth;
-	this.naturalHeight = this._object.naturalHeight;
+	if(this._object) {
+		this.tagName = this._object.nodeName;
+		this.naturalWidth = this._object.naturalWidth;
+		this.naturalHeight = this._object.naturalHeight;
+	}
 }
 
 Day._extend({

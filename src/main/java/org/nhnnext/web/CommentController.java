@@ -10,6 +10,8 @@ import org.nhnnext.exception.NoCommentException;
 import org.nhnnext.exception.NoLoginException;
 import org.nhnnext.exception.NoUserException;
 import org.nhnnext.log.Mylog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/board")
 public class CommentController extends defaultController {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(CommentController.class);
 
 	/**
 	 * Title : 코멘트 쓰기 과정
@@ -50,7 +55,10 @@ public class CommentController extends defaultController {
 			Board board = getBoard(id);
 			Comment comment = new Comment(board, contents);
 			comment.setUser(user);
-			commentRepository.save(comment);
+			Comment savedComment = commentRepository.save(comment);
+
+			log.info("Add Comment : {}", savedComment);
+
 			return "redirect:/board";// + id;
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
@@ -103,7 +111,9 @@ public class CommentController extends defaultController {
 			// 코멘트 작성자 기입
 			comment.setUser(user);
 
-			commentRepository.save(comment);
+			Comment savedComment = commentRepository.save(comment);
+
+			log.info("Add Comment : {}", savedComment);
 			return "redirect:/board/" + id;
 		} catch (NullPointerException e) {
 			Mylog.printError(e);
@@ -152,7 +162,10 @@ public class CommentController extends defaultController {
 			Comment comment = new Comment(board, contents);
 			comment.setUser(user);
 
-			return commentRepository.save(comment);
+			Comment savedComment = commentRepository.save(comment);
+			log.info("XHR Add Comment : {}", savedComment);
+
+			return savedComment;
 
 		} catch (NoBoardException e) {
 			return WebError.error("No Post", "없는 게시글이나 삭제된 게시글입니다.");
@@ -201,6 +214,8 @@ public class CommentController extends defaultController {
 
 			if (!user.getUserid().equals(parentComment.getUser().getUserid()))
 				throw new InvalidUserException("this is not yours");
+
+			log.info("XHR Delete Comment : {}", parentComment);
 
 			commentRepository.delete(parentComment);
 

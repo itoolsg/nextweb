@@ -89,9 +89,12 @@ public class Board {
 		String tagContents = contents.replace("\n", "<br />");
 		return tagContents;
 	}
+
+
 	@Override
 	public String toString() {
-		return "Board [title=" + title + ", contents=" + contents + "]";
+		return "Board [id=" + id + ", title=" + title + ", contents="
+				+ contents + ", user=" + user + "]";
 	}
 
 	public void deleteComments(CommentRepository commentRepository) {

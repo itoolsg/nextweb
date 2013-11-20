@@ -5,11 +5,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Day Board</title>
+
 <link rel="stylesheet" type="text/css" href="/stylesheets/default.css" />
 <link rel="stylesheet" type="text/css" href="/stylesheets/timeline.css" />
-<script src="/javascripts/default.js" type="text/javascript"></script>
+
 <script src="/javascripts/day.js" type="text/javascript"></script>
+<script src="/javascripts/default.js" type="text/javascript"></script>
 <script src="/javascripts/write.js" type="text/javascript"></script>
 <script src="/javascripts/timeline.js" type="text/javascript"></script>
 
@@ -58,7 +60,7 @@
 		<ul class="boardSample">
 			<li class="board" id="board{document.id}" board_id="{document.id}">
 				<div class="contents">
-					<a class="board-delete" href="#">x</a>
+					<a class="board-modify" href="#">M</a>  <a class="board-delete" href="#">x</a>
 					<p>
 						<a class="subject" href="/board/{document.id}">{document.title}</a>
 					</p>
@@ -168,8 +170,9 @@
 				<li class="board" id="board${document.id}" board_id="${document.id}">
 					<div class="contents">
 						<a class="board-delete" href="#">x</a>
+						<a class="board-modify" href="/board/${document.id }/modify">M</a>
 						<p>
-							<a class="subject" href="/board/${document.id}">${document.title}</a>
+							<a class="subject" href="#">${document.title}</a>
 						</p>
 						<hr class="line" />
 						<div class="content">

@@ -20,7 +20,7 @@ public class Mylog {
 
 		try {
 			Writer writer = new BufferedWriter(new FileWriter("log.txt", true));
-			System.out.println("\n\n" + "Error : " + e.getMessage() + "\n\n");
+			//System.out.println("\n\n" + "Error : " + e.getMessage() + "\n\n");
 
 			writer.write("!!!!Error : " + e.getMessage() + "\n");
 			writer.write(e.getLocalizedMessage() + "\n");
